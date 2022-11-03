@@ -12,6 +12,8 @@
 
 <script lang="ts">
     let message: string = "Blank Svelte Native App"
+
+    //This is a comment for testing
 </script>
 
 <style>
