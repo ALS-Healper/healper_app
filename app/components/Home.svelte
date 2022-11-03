@@ -5,6 +5,7 @@
             <formattedString>
                 <span class="fas" text="&#xf135;" />
                 <span text=" {message}" />
+                <span text="Look, this string is only on Alek's branch!"/>
             </formattedString>
         </label>
     </gridLayout>
