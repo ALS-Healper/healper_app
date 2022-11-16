@@ -1,6 +1,7 @@
 <script>
     import { goBack } from 'svelte-native'
     import { onMount } from 'svelte'
+    import Navbar from './components/navbar.svelte';
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionIndex = 0;
@@ -41,15 +42,20 @@
 </script>
 
 <page>
-    <actionbar title="Client questionnaire page" />
+    <Navbar />
     <stackLayout>
         <label class="selectionText">Questions from your psychologist</label>
         <label text="{currentQuestion.question_text}" class="questionText" textWrap="true" />
         <flexBoxLayout flexWrap="wrap" justifyContent="center">
            <textfield bind:text="{answer}" hint="Enter your answer here"/>
+           {#if currentQuestion.options}
+            {#each currentQuestion.options as option}
+                <button text="{option.option_text}" class="button"/>
+            {/each}
+           {/if}
         </flexBoxLayout>
         <!--Skal ind på diary page-->
-        <button text="Nothing in particular" class="button" on:tap={onAnswerTap}/>
+        <button text="Submit answer" class="button" on:tap={onAnswerTap}/>
     </stackLayout>
 </page>
 

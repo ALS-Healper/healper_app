@@ -1,16 +1,15 @@
 <script>
     import RoleSelect from './RoleSelect.svelte'
 	import { navigate } from 'svelte-native'
-
+    import Navbar from './components/navbar.svelte';
+   
 </script>
 
 <page>
-    <actionBar title="Home" />
     <stackLayout>
         <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" />
         <button text="Go to Diary" on:tap="{ () => navigate({ page: RoleSelect }) }" />
     </stackLayout>
-
 </page>
 
 <style>

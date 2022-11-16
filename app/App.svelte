@@ -6,6 +6,7 @@
 </script>
 
 <frame>
+    <actionBar title="Test" />
     <Home />
   
 </frame>
