@@ -7,7 +7,8 @@
     let questionIndex = 0;
     let questionList = [];
 
-    let answer;
+    let inputAnswer;
+    let choiceAnswer;
     let sliderValue = 0;
 
     onMount(async ()=>{
@@ -19,10 +20,24 @@
     });
 
     function onAnswerTap(){
-        createQuestionEntry("http://10.0.2.2:8080/questionEntries/",{response_text: answer, 
-            creator:1, 
-            question: questionIndex              
+        if(currentQuestion.optioninputs){
+            createQuestionEntry("http://10.0.2.2:8080/inputentries/",{response_text: inputAnswer, 
+            "creator": 1, 
+            "question": currentQuestion.pk         
         })
+        }
+        else if(currentQuestion.optionchoices){
+            createQuestionEntry("http://10.0.2.2:8080/choiceentries/",{choice_value: choiceAnswer, 
+            creator: 1, 
+            question: currentQuestion.pk         
+        })
+        }
+        else{
+            createQuestionEntry("http://10.0.2.2:8080/numericentries/",{response_value: sliderValue, 
+            "creator": 1, 
+            "question": currentQuestion.pk          
+        })
+        }
         
         questionIndex += 1
         currentQuestion = questionIndex >= questionList.length ? {question_text: "Tak for dit svar"} : questionList[questionIndex]
@@ -57,13 +72,13 @@
         <flexBoxLayout flexWrap="wrap" justifyContent="center">
            {#if currentQuestion.optioninputs}
             {#each currentQuestion.optioninputs as option}
-            <textfield bind:text="{answer}" hint="{option.standard_text}"/>
+            <textfield bind:value="{inputAnswer}" hint="{option.standard_text}"/>
             {/each}
             <button text="Submit answer" class="button" on:tap={onAnswerTap}/>
            {/if}
            {#if currentQuestion.optionchoices}
             {#each currentQuestion.optionchoices as option}
-                <button bind:text="{answer = option.option_value}" class="button" on:tap={onAnswerTap}/>
+                <button bind:text="{option.option_value}" bind:value="{choiceAnswer}" class="button" on:tap={onAnswerTap}/>
             {/each}
            {/if}
            {#if currentQuestion.optionnumerics}
