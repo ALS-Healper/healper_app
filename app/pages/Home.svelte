@@ -1,40 +1,21 @@
 <script>
     import RoleSelect from './RoleSelect.svelte'
+    import ClientOverview from './ClientOverview.svelte';
 	import { navigate } from 'svelte-native'
     import Questionnaire from './Questionnaire.svelte'
-   
 </script>
 
-<page>
+<page actionBarHidden="true">
     <!-- <stackLayout>
         <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" />
         <button text="Go to Diary" on:tap="{ () => navigate({ page: RoleSelect }) }" />
     </stackLayout> -->
     <gridLayout rows="200, 100, *, 80" columns="*">
 
+
         <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="0" />
         <button text="Go to Diary" on:tap="{ () => navigate({ page: RoleSelect }) }"  row="1" col="0"/>
         <label text="Feed" class="info" row="2" col="0"/>
-        <flexboxLayout orientation="horizontal" row="3" col="0" class="navBar" justifyContent="space-around">
-            <button class="navButton">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Home"/>
-                </formattedString>
-            </button>
-            <button class="navButton">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Menu"/>
-                </formattedString>
-            </button>
-            <button class="navButton" on:tap="{ () => navigate({ page: Questionnaire }) }">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Settings"/>
-                </formattedString>
-            </button>
-        </flexboxLayout>
     </gridLayout>
 </page>
 

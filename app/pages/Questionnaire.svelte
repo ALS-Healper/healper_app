@@ -1,14 +1,13 @@
 <script>
     import { goBack } from 'svelte-native'
     import { onMount } from 'svelte'
-    import Navbar from './components/navbar.svelte';
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionIndex = 0;
     let questionList = [];
 
-    let inputAnswer;
-    let choiceAnswer;
+    let inputAnswer ="";
+    let choiceAnswer ="";
     let sliderValue = 0;
 
     onMount(async ()=>{
@@ -19,23 +18,24 @@
        currentQuestion = data.results[0].inputquestions[0]
     });
 
-    function onAnswerTap(){
+    function onAnswerTap(args){
         if(currentQuestion.optioninputs){
             createQuestionEntry("http://10.0.2.2:8080/inputentries/",{response_text: inputAnswer, 
-            "creator": 1, 
-            "question": currentQuestion.pk         
+            creator: 1, 
+            question: currentQuestion.pk         
         })
         }
         else if(currentQuestion.optionchoices){
-            createQuestionEntry("http://10.0.2.2:8080/choiceentries/",{choice_value: choiceAnswer, 
+            const button = args.object
+            createQuestionEntry("http://10.0.2.2:8080/choiceentries/",{choice_value: button.text, 
             creator: 1, 
             question: currentQuestion.pk         
         })
         }
         else{
             createQuestionEntry("http://10.0.2.2:8080/numericentries/",{response_value: sliderValue, 
-            "creator": 1, 
-            "question": currentQuestion.pk          
+            creator: 1, 
+            question: currentQuestion.pk          
         })
         }
         
@@ -64,21 +64,20 @@
 
 </script>
 
-<page>
-    <Navbar />
+<page actionBarHidden="true">
     <stackLayout>
         <label class="selectionText">Questions from your psychologist</label>
         <label text="{currentQuestion.question_text}" class="questionText" textWrap="true" />
         <flexBoxLayout flexWrap="wrap" justifyContent="center">
            {#if currentQuestion.optioninputs}
             {#each currentQuestion.optioninputs as option}
-            <textfield bind:value="{inputAnswer}" hint="{option.standard_text}"/>
+            <textfield bind:text="{inputAnswer}" hint="{option.standard_text}"/>
             {/each}
             <button text="Submit answer" class="button" on:tap={onAnswerTap}/>
            {/if}
            {#if currentQuestion.optionchoices}
             {#each currentQuestion.optionchoices as option}
-                <button bind:text="{option.option_value}" bind:value="{choiceAnswer}" class="button" on:tap={onAnswerTap}/>
+                <button bind:text="{option.option_value}" class="button" on:tap={onAnswerTap}/>
             {/each}
            {/if}
            {#if currentQuestion.optionnumerics}
