@@ -1,17 +1,9 @@
 <script>
+    import { Observable } from "@nativescript/core";
     import { onMount } from "svelte";
-    import { ObservableArray } from 'tns-core-modules/data/observable-array';
-
-export const getCountriesData = () => {
-  return new ObservableArray([
-    { Country: 'Germany', Amount: 15, SecondVal: 14, ThirdVal: 24, Impact: 0, Year: 0 },
-    { Country: 'France', Amount: 13, SecondVal: 23, ThirdVal: 25, Impact: 0, Year: 0 },
-    { Country: 'Bulgaria', Amount: 24, SecondVal: 17, ThirdVal: 23, Impact: 0, Year: 0 },
-    { Country: 'Spain', Amount: 11, SecondVal: 19, ThirdVal: 24, Impact: 0, Year: 0 },
-    { Country: 'USA', Amount: 18, SecondVal: 8, ThirdVal: 21, Impact: 0, Year: 0 }
-  ]);
-};
-
+    
+let testData = new Observable();
+testData.data = [{date: "17/11/2022", value: 4}, {date: "18/11/2022", value: 6}, {date: "19/11/2022", value: 5}, {date: "20/11/2022", value: 8}]    
 let answersList = []
 let client = {username: "Loading username...", email: "Loading email..."}
 let therapist = {username: "Loading therapist..."};
@@ -42,32 +34,38 @@ onMount( async () => {
         <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="1" rowSpan="2"/>
         <tabView row="2" col="0" colSpan="2">
             <tabViewItem title="Answers">
-                <stackLayout>
-                    <label text="Choice questions" class="selectionText"/>
-                    {#each choiceAnswers as answer}
-                        <stackLayout>
-                            <label text="{answer.question.question_text}" />
-                            <label text="{answer.choice_value}" />
-                        </stackLayout>
-                    {/each}
-                    <label text="Input questions" class="selectionText"/>
-                    {#each inputAswers as answer}
-                        <stackLayout>
-                            <label text="{answer.question.question_text}" />
-                            <label text="{answer.response_text}" />
-                        </stackLayout>
-                    {/each}
-                    <label text="Numeric questions" class="selectionText"/>
-                    {#each numericAnswers as answer}
-                        <stackLayout>
-                            <label text="{answer.question.question_text}" />
-                            <label text="{answer.response_value}" />
-                        </stackLayout>
-                    {/each}
-            </stackLayout>
+                <scrollView>
+                    <stackLayout>
+                        <label text="Choice questions" class="selectionText"/>
+                        {#each choiceAnswers as answer}
+                            <stackLayout>
+                                <label text="{answer.question.question_text}" />
+                                <label text="{answer.choice_value}" />
+                            </stackLayout>
+                        {/each}
+                        <label text="Input questions" class="selectionText"/>
+                        {#each inputAswers as answer}
+                            <stackLayout>
+                                <label text="{answer.question.question_text}" />
+                                <label text="{answer.response_text}" />
+                            </stackLayout>
+                        {/each}
+                        <label text="Numeric questions" class="selectionText"/>
+                        {#each numericAnswers as answer}
+                            <stackLayout>
+                                <label text="{answer.question.question_text}" />
+                                <label text="{answer.response_value}" />
+                            </stackLayout>
+                        {/each}
+                </stackLayout>
+            </scrollView>
         </tabViewItem>
         <tabViewItem title="Graph">
-            <label text="Hello :D"/>
+            <radCartesianChart id="cartesianChart">
+                <categoricalAxis prop:horizontalAxis />
+                <linearAxis prop:verticalAxis/>
+                <lineSeries items="{testData.data}" categoryProperty="date" valueProperty="value" />
+              </radCartesianChart>
         </tabViewItem>
     </tabView>
     </gridLayout>
