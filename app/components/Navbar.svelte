@@ -1,49 +1,52 @@
 <script>
-    import { navigate } from "svelte-native"
-    import Questionnaire from "../pages/Questionnaire.svelte"
-    import Home from "../pages/Home.svelte"
+    import RoleSelect from '../pages/RoleSelect.svelte'
+	import { navigate } from 'svelte-native'
+    import Questionnaire from '../pages/Questionnaire.svelte'
+    import Home from '../pages/Home.svelte'
+    import ClientDetail from '../pages/ClientDetail.svelte'
 
 </script>
-<flexboxLayout orientation="horizontal" row="3" col="0" class="navBar" justifyContent="space-around">
-    <button class="navButton" on:tap="{ () => navigate({ page: Home }) }">
-        <formattedString>
-            <span class="fas" text="&#xf135;\n"/>
-            <span text="Home"/>
-        </formattedString>
-    </button>
-    <button class="navButton">
-        <formattedString>
-            <span class="fas" text="&#xf135;\n"/>
-            <span text="Menu"/>
-        </formattedString>
-    </button>
-    <button class="navButton" on:tap="{ () => navigate({ page: Questionnaire }) }">
-        <formattedString>
-            <span class="fas" text="&#xf135;\n"/>
-            <span text="Settings"/>
-        </formattedString>
-    </button>
-</flexboxLayout>
+<dockLayout height="100%">
+    <stackLayout dock="bottom" height="50" class="bottom-navigation" orientation="horizontal">
+        <stackLayout on:tap="{ () => navigate({ page: Home }) }">
+            <image src="~/static-resources/images/icons/home.png" class="icon" row="0" col="0" />
+            <label text="Home" />
+        </stackLayout>
+        <stackLayout on:tap="{ () => navigate({ page: Questionnaire }) }" >
+            <image src="~/static-resources/images/icons/sun.png" class="icon" row="0" col="0" />
+            <label text="Diary" />
+        </stackLayout>
+        <stackLayout on:tap="{ () => navigate({ page: ClientDetail }) }">
+            <image src="~/static-resources/images/icons/bar.png" class="icon" row="0" col="0" />
+            <label text="Progress" />
+        </stackLayout>
+        <stackLayout>
+            <image src="~/static-resources/images/icons/circle.png" class="icon" row="0" col="0" />
+            <label text="Focus" />
+        </stackLayout>
+    </stackLayout>
+    <slot />
+</dockLayout>
 <style>
-    .fas {
-        color: #3A53FF;
+    .bottom-navigation{
+        background-color:rgba(252, 249, 244); 
+        justify-content: space-around;
+        box-shadow: 0px -2px 2px rgba(34,34,34,0.6)
     }
 
-    .navBar{
-        background-color: rgb(45,124,124);
-        align-items: center;
-        border: 5px solid black;
-        border-radius: 30px;
-        height: 200px;
+    .icon{
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0;
     }
 
-    .navButton{
-        margin: 0;
+    .bottom-navigation stackLayout{
+        width: 25%;
         border-color: transparent;
-        background-color: transparent;
         border-width: 1;
-        z-index: 0;
-        font-size: 15;
+        color:  rgb(45, 124, 124); 
+        text-align: center;
+        align-items: center;
     }
 
 </style>
