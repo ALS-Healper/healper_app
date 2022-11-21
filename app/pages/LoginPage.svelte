@@ -1,12 +1,46 @@
 <script>
-    import { userToken, user } from '../store/userStore.js'
+    import {SecureStorage} from "@nativescript/secure-storage"
+    import { onMount } from "svelte"
     import { navigate } from 'svelte-native'
+    import { userToken, user } from '../store/userStore.js'
     import Home from './Home.svelte'
     let username;
     let password;
 
+    let secureStorage = new SecureStorage()
+
+
+    onMount(async ()=>{
+        //let token;
+
+        let token = secureStorage.getSync({
+                key: "authToken"
+            });
+
+        //secureStorage.get("authToken").then((value) => token = value)
+        if(token){
+            secureStorage.get({key:"authToken"}).then((value) => token = value)
+        
+        const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
+            method: 'Get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            }
+        })
+        const data2 = await res2.json()
+        user.set({'user': data2.results[0]})
+        navigate({ page: Home }) 
+        }
+    })
+
+
 
 async function login(){
+    let token;
+    secureStorage.get("authToken").then((value) => token = value)
+
+    if(!token){
     const res = await fetch('http://10.0.2.2:8080/api-token-auth/',  {
             method: 'POST',
             mode: 'cors',
@@ -19,19 +53,29 @@ async function login(){
             })
         })
         const data = await res.json()
-    if(res.ok){
         userToken.set({'Token': data.token})
+
+        secureStorage.set({
+            key : "authToken",
+            value: data.token
+        }).then((data) => alert(data))
+        token = data.token
+    }
+    else{
+        secureStorage.get({key:"authToken"}).then((value) => token = value)
+    }
+        
         const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
             method: 'Get',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Token ${data.token}`
+                'Authorization': `Token ${token}`
             }
         })
         const data2 = await res2.json()
         user.set({'user': data2.results[0]})
         navigate({ page: Home }) 
-    }
+    
         
 
 }
