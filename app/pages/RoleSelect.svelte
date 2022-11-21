@@ -2,7 +2,7 @@
 import { goBack } from 'svelte-native'
 import { navigate } from 'svelte-native'
 import Questionnaire from './Questionnaire.svelte'
-import ClientOverview from './ClientOverview.svelte'
+import ClientDetails from './ClientDetail.svelte'
 
 </script>
 
@@ -11,7 +11,7 @@ import ClientOverview from './ClientOverview.svelte'
     <stackLayout>
         <label class="selectionText">Please select role</label>
         <button text="Client" class="button" on:tap="{ () => navigate({ page: Questionnaire }) }"/>
-        <button text="Psychologist" class="button" on:tap="{ () => navigate({ page: ClientOverview }) }"/>
+        <button text="Psychologist" class="button" on:tap="{ () => navigate({ page: ClientDetails }) }"/>
         <button text="Back" class="button" on:tap="{goBack}"/>
     </stackLayout>
 </page>

@@ -1,0 +1,52 @@
+<script>
+    import RoleSelect from '../pages/RoleSelect.svelte'
+	import { navigate } from 'svelte-native'
+    import Questionnaire from '../pages/Questionnaire.svelte'
+    import Home from '../pages/Home.svelte'
+    import ClientDetail from '../pages/ClientDetail.svelte'
+
+</script>
+<dockLayout height="100%">
+    <stackLayout dock="bottom" height="50" class="bottom-navigation" orientation="horizontal">
+        <stackLayout on:tap="{ () => navigate({ page: Home }) }">
+            <image src="~/static-resources/images/icons/home.png" class="icon" row="0" col="0" />
+            <label text="Home" />
+        </stackLayout>
+        <stackLayout on:tap="{ () => navigate({ page: Questionnaire }) }" >
+            <image src="~/static-resources/images/icons/sun.png" class="icon" row="0" col="0" />
+            <label text="Diary" />
+        </stackLayout>
+        <stackLayout on:tap="{ () => navigate({ page: ClientDetail }) }">
+            <image src="~/static-resources/images/icons/bar.png" class="icon" row="0" col="0" />
+            <label text="Progress" />
+        </stackLayout>
+        <stackLayout>
+            <image src="~/static-resources/images/icons/circle.png" class="icon" row="0" col="0" />
+            <label text="Focus" />
+        </stackLayout>
+    </stackLayout>
+    <slot />
+</dockLayout>
+<style>
+    .bottom-navigation{
+        background-color:rgba(252, 249, 244); 
+        justify-content: space-around;
+        box-shadow: 0px -2px 2px rgba(34,34,34,0.6)
+    }
+
+    .icon{
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0;
+    }
+
+    .bottom-navigation stackLayout{
+        width: 25%;
+        border-color: transparent;
+        border-width: 1;
+        color:  rgb(45, 124, 124); 
+        text-align: center;
+        align-items: center;
+    }
+
+</style>

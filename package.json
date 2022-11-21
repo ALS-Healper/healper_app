@@ -10,7 +10,9 @@
     "@nativescript/core": "~8.3.0",
     "@nativescript/theme": "~3.0.2",
     "nativescript-bottom-navigation": "^2.0.5",
-    "svelte-native": "~1.0.0"
+    "nativescript-ui-chart": "^14.2.1",
+    "svelte-native": "~1.0.0",
+    "svelte-native-nativescript-ui": "^1.0.0"
   },
   "devDependencies": {
     "@nativescript/android": "8.3.1",

@@ -2,75 +2,74 @@
     import RoleSelect from './RoleSelect.svelte'
 	import { navigate } from 'svelte-native'
     import Questionnaire from './Questionnaire.svelte'
-   
+    import Home from './Home.svelte'
+    import ClientDetail from './ClientDetail.svelte'
+    import { StackLayout } from '@nativescript/core';
+
+    import Template from "../components/Template.svelte"
+  
 </script>
 
-<page>
-    <!-- <stackLayout>
-        <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" />
-        <button text="Go to Diary" on:tap="{ () => navigate({ page: RoleSelect }) }" />
-    </stackLayout> -->
-    <gridLayout rows="200, 100, *, 80" columns="*">
-
-        <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="0" />
-        <button text="Go to Diary" on:tap="{ () => navigate({ page: RoleSelect }) }"  row="1" col="0"/>
-        <label text="Feed" class="info" row="2" col="0"/>
-        <flexboxLayout orientation="horizontal" row="3" col="0" class="navBar" justifyContent="space-around">
-            <button class="navButton">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Home"/>
-                </formattedString>
-            </button>
-            <button class="navButton">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Menu"/>
-                </formattedString>
-            </button>
-            <button class="navButton" on:tap="{ () => navigate({ page: Questionnaire }) }">
-                <formattedString>
-                    <span class="fas" text="&#xf135;\n"/>
-                    <span text="Settings"/>
-                </formattedString>
-            </button>
-        </flexboxLayout>
-    </gridLayout>
+<page actionBarHidden="true">
+        <Template>
+        <stackLayout rows="200, 100, *, 80" columns="*" horizontalAlignment="center" verticalAlignment="center">
+            <image src="~/static-resources/images/stock/healperlogo.png"/>
+            <label class="header" text="Healper"/>
+            <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
+        </stackLayout>
+        </Template>
 </page>
 
 <style>
-    .fas {
-        color: #3A53FF;
+    .bottom-navigation{
+        background-color:rgba(252, 249, 244); 
+        justify-content: space-around;
     }
 
-    .navBar{
-        background-color: aqua;
-        align-items: center;
-        border: 5px solid black;
-        border-radius: 30px;
-        
+    .icon{
+        width: 50px;
+        height: 50px;
+        margin-bottom: 0;
     }
 
-    .navButton{
-        margin: 0;
-        border-color: transparent;
-        background-color: transparent;
+    .bottom-navigation stackLayout{
+        width: 25%;
+        border-color: black; 
         border-width: 1;
-        z-index: 0;
-        font-size: 15;
+        color:  rgb(45, 124, 124); 
+        text-align: center;
+        align-items: center;
     }
 
-    .info {
-        font-size: 20;
-        horizontal-align: center;
-        vertical-align: center;
+    .header{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 40px;
+        border-radius: 1px solid black;
+        color: rgb(45, 124, 124); 
+        -webkit-text-stroke: 1px black;
+        text-shadow: 2px 2px 8px black;
+        width: 100%;
+        text-align: center;
+        align-self: center;
     }
 
-    .profileImage {
-        border-radius: 50%;
-        width: 200px;
-        height: 200px;
-        margin: 100px;
+    .sub-header{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 25px;
+        border-radius: 1px solid black;
+        color: rgb(45, 124, 124); 
+        -webkit-text-stroke: 1px black;
+        text-shadow: 2px 2px 8px black;
+        width: 100%;
+        text-align: center;
+        align-self: center;
+        margin-top: 50px;
+    }
+
+    image{
+        width: 300px;
+        height: 300px;
     }
 
 </style>
