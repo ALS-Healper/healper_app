@@ -5,24 +5,25 @@
     import TheraHome from './pages/TheraHome.svelte';
     import LoginPage from './pages/LoginPage.svelte'
     import { user } from './store/userStore.js'
+    import {SecureStorage} from "@nativescript/secure-storage"
+
+    let secureStorage = new SecureStorage()
 
     let loginUser;
     let login = false;
-    user.subscribe((data) => {
-        loginUser = data
-        if(loginUser.user != null){
-            console.log(loginUser.user.therapist[0].is_therapist)
-        }
+    onMount(() => {
+        loginUser = secureStorage.getSync({
+                key: "user"
+            });
     })
     
 </script>
-{#if loginUser.user != null}
-    {#if loginUser.user.therapist[0].is_therapist}
+{#if loginUser}
+    {#if loginUser.therapist[0].is_therapist}
         <frame>
         <TheraHome />
         </frame>
-    {/if}
-    {#if loginUser.username == "ClientTest"}
+    {:else if loginUser.client[0]}
         <frame>
         <Home />
         </frame>

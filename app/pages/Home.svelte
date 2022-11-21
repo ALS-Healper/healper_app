@@ -7,6 +7,9 @@
     import { StackLayout } from '@nativescript/core';
 
     import Template from "../components/Template.svelte"
+    import {SecureStorage} from "@nativescript/secure-storage"
+
+let secureStorage = new SecureStorage()
   
 </script>
 
@@ -16,6 +19,7 @@
             <image src="~/static-resources/images/stock/healperlogo.png"/>
             <label class="header" text="Healper"/>
             <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
+            <button text="logout" on:tap="{() => secureStorage.removeSync({key: "authToken"})}"/>
         </stackLayout>
         </Template>
 </page>

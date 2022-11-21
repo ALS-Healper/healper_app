@@ -4,6 +4,7 @@
     import { navigate } from 'svelte-native'
     import { userToken, user } from '../store/userStore.js'
     import Home from './Home.svelte'
+    import App from '../App.svelte'
     let username;
     let password;
 
@@ -30,7 +31,7 @@
         })
         const data2 = await res2.json()
         user.set({'user': data2.results[0]})
-        navigate({ page: Home }) 
+        navigate({ page: App }) 
         }
     })
 
@@ -58,7 +59,7 @@ async function login(){
         secureStorage.set({
             key : "authToken",
             value: data.token
-        }).then((data) => alert(data))
+        }).then((data) => console.log(data))
         token = data.token
     }
     else{
@@ -73,9 +74,12 @@ async function login(){
             }
         })
         const data2 = await res2.json()
+        secureStorage.set({
+            key : "user",
+            value: data2.results[0]
+        }).then((data) => console.log(data))
         user.set({'user': data2.results[0]})
-        navigate({ page: Home }) 
-    
+        navigate({ page: App }) 
         
 
 }
