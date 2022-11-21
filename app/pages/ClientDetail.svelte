@@ -2,6 +2,8 @@
     import { Observable } from "@nativescript/core";
     import { onMount } from "svelte";
     import Template from "../components/Template.svelte"
+    import { formatDates } from "../static-resources/images/store/timehandler.js"
+
     
 let testData = new Observable();
 testData.data = [{date: "17/11/2022", value: 4}, {date: "18/11/2022", value: 6}, {date: "19/11/2022", value: 5}, {date: "20/11/2022", value: 8}]    
