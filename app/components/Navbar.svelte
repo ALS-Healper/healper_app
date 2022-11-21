@@ -7,7 +7,7 @@
 
 </script>
 <dockLayout height="100%">
-    <stackLayout dock="bottom" height="50" class="bottom-navigation" orientation="horizontal">
+    <stackLayout dock="bottom" class="bottom-navigation" orientation="horizontal">
         <stackLayout on:tap="{ () => navigate({ page: Home }) }">
             <image src="~/static-resources/images/icons/home.png" class="icon" row="0" col="0" />
             <label text="Home" />
@@ -31,7 +31,8 @@
     .bottom-navigation{
         background-color:rgba(252, 249, 244); 
         justify-content: space-around;
-        box-shadow: 0px -2px 2px rgba(34,34,34,0.6)
+        box-shadow: 0px -2px 2px rgba(34,34,34,0.6);
+        height: "100", 2%;
     }
 
     .icon{
