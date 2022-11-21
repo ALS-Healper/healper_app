@@ -30,7 +30,7 @@ async function login(){
         })
         const data2 = await res2.json()
         user.set({'user': data2.results[0]})
-        navigate({ page: Home }) 
+        // navigate({ page: Home }) 
     }
         
 
