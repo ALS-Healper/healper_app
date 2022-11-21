@@ -74,8 +74,13 @@ async function login(){
         })
         const data2 = await res2.json()
         user.set({'user': data2.results[0]})
+<<<<<<< HEAD
+        // navigate({ page: Home }) 
+    }
+=======
         navigate({ page: Home }) 
     
+>>>>>>> 06b52e6b2915b38956e43b03b0a2a980db814598
         
 
 }
