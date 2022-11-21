@@ -14,6 +14,7 @@
     let authToken;
 
     onMount(async ()=>{
+
     userToken.subscribe((data) =>{
         authToken = data.Token
     })
@@ -29,6 +30,7 @@
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions]
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
        currentQuestion = data.results[0].inputquestions[0]
+
     });
 
     function onAnswerTap(args){
