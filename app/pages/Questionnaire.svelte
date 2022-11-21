@@ -2,6 +2,7 @@
     import { goBack } from 'svelte-native'
     import { onMount } from 'svelte'
     import Template from '../components/Template.svelte'
+    import { userToken } from '../store/userStore.js'
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionIndex = 0;
@@ -10,9 +11,20 @@
     let inputAnswer ="";
     let choiceAnswer ="";
     let sliderValue = 0;
+    let authToken;
 
     onMount(async ()=>{
-       const res = await fetch("http://10.0.2.2:8080/questionnaires/");
+    userToken.subscribe((data) =>{
+        authToken = data.Token
+    })
+    
+       const res = await fetch("http://10.0.2.2:8080/questionnaires/", {
+            method: 'Get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${authToken}`
+            }
+        });
        const data = await res.json()
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions]
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen

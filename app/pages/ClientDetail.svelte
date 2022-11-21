@@ -2,7 +2,7 @@
     import { Observable } from "@nativescript/core";
     import { onMount } from "svelte";
     import Template from "../components/Template.svelte"
-    import { formatDates } from "../static-resources/images/store/timehandler.js"
+    import { formatDates } from "../store/timehandler.js"
 
     
 let testData = new Observable();
