@@ -1,13 +1,13 @@
+import { detach } from "svelte/internal";
 import { writable } from "svelte/store"
 
-async function formatDates(){
+function formatDates(stringDate){
 
-    const dates = [];
+    let date = new Date(stringDate);
 
-    let testData = new Date();
+    let formatDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear(); 
 
-    console.log(testData.toLocaleDateString("en-US")); 
-
+    return formatDate;
 
 }
 
