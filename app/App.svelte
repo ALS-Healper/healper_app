@@ -20,16 +20,16 @@
 </script>
 {#if loginUser}
     {#if loginUser.therapist[0].is_therapist}
-        <frame>
+        <frame actionBarVisibility="never">
         <TheraHome />
         </frame>
     {:else if loginUser.client[0]}
-        <frame>
+        <frame actionBarVisibility="never">
         <Home />
         </frame>
     {/if}
     {:else}
-    <frame>
+    <frame actionBarVisibility="never">
         <LoginPage />
     </frame>
 {/if}

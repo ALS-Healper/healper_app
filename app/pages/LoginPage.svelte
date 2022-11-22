@@ -31,7 +31,7 @@
         })
         const data2 = await res2.json()
         user.set({'user': data2.results[0]})
-        navigate({ page: App }) 
+        navigate({ page: Home }) 
         }
     })
 
@@ -79,7 +79,7 @@ async function login(){
             value: data2.results[0]
         }).then((data) => console.log(data))
         user.set({'user': data2.results[0]})
-        navigate({ page: App }) 
+        navigate({ page: Home }) 
         
 
 }

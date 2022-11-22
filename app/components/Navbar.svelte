@@ -4,6 +4,7 @@
     import Questionnaire from '../pages/Questionnaire.svelte'
     import Home from '../pages/Home.svelte'
     import ClientDetail from '../pages/ClientDetail.svelte'
+    import ClientList from '~/pages/ClientList.svelte'
 
 </script>
 <dockLayout height="100%">
@@ -16,7 +17,7 @@
             <image src="~/static-resources/images/icons/sun.png" class="icon" row="0" col="0" />
             <label text="Diary" />
         </stackLayout>
-        <stackLayout on:tap="{ () => navigate({ page: ClientDetail }) }">
+        <stackLayout on:tap="{ () => navigate({ page: ClientList }) }">
             <image src="~/static-resources/images/icons/bar.png" class="icon" row="0" col="0" />
             <label text="Progress" />
         </stackLayout>
