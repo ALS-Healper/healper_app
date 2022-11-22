@@ -20,7 +20,7 @@
 
         //secureStorage.get("authToken").then((value) => token = value)
         if(token){
-            secureStorage.get({key:"authToken"}).then((value) => token = value)
+            //secureStorage.get({key:"authToken"}).then((value) => token = value)
         
         const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
             method: 'Get',
@@ -30,7 +30,10 @@
             }
         })
         const data2 = await res2.json()
-        user.set({'user': data2.results[0]})
+        secureStorage.set({
+            key : "user",
+            value: JSON.stringify(data2.results[0])
+        }).then((data) => console.log(data))
         navigate({ page: Home }) 
         }
     })
@@ -76,7 +79,7 @@ async function login(){
         const data2 = await res2.json()
         secureStorage.set({
             key : "user",
-            value: data2.results[0]
+            value: JSON.stringify(data2.results[0])
         }).then((data) => console.log(data))
         user.set({'user': data2.results[0]})
         navigate({ page: Home }) 

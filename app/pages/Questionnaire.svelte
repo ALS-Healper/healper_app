@@ -1,23 +1,30 @@
 <script>
     import { goBack } from 'svelte-native'
     import { onMount } from 'svelte'
-    import Template from '../components/Template.svelte'
+    import Template from '../components/ClientTemplate.svelte'
     import { userToken } from '../store/userStore.js'
+    import {SecureStorage} from "@nativescript/secure-storage"
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionIndex = 0;
     let questionList = [];
+    let secureStorage = new SecureStorage()
 
     let inputAnswer ="";
     let choiceAnswer ="";
     let sliderValue = 0;
     let authToken;
+    let user;
 
     onMount(async ()=>{
 
-    userToken.subscribe((data) =>{
-        authToken = data.Token
-    })
+        authToken = secureStorage.getSync({
+                key: "authToken"
+            });
+        user = JSON.parse(secureStorage.getSync({
+                key: "user"
+            }));
+
     
        const res = await fetch("http://10.0.2.2:8080/questionnaires/", {
             method: 'Get',
@@ -36,20 +43,20 @@
     function onAnswerTap(args){
         if(currentQuestion.optioninputs){
             createQuestionEntry("http://10.0.2.2:8080/inputentries/",{response_text: inputAnswer, 
-            creator: 1, 
+            creator: user.client[0].pk, 
             question: currentQuestion.pk         
         })
         }
         else if(currentQuestion.optionchoices){
             const button = args.object
             createQuestionEntry("http://10.0.2.2:8080/choiceentries/",{choice_value: button.text, 
-            creator: 1, 
+            creator: user.client[0].pk, 
             question: currentQuestion.pk         
         })
         }
         else{
             createQuestionEntry("http://10.0.2.2:8080/numericentries/",{response_value: sliderValue, 
-            creator: 1, 
+            creator: user.client[0].pk, 
             question: currentQuestion.pk          
         })
         }
@@ -65,7 +72,8 @@
             method: 'POST',
             mode: 'cors',
             headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${authToken}`
             },
             body: JSON.stringify(data) 
         });

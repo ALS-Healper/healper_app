@@ -2,14 +2,19 @@
     import { onMount } from "svelte";
     import { userToken } from '../store/userStore.js'
     import { Template } from 'svelte-native/components'
+    import ClientTemplate from '../components/ClientTemplate.svelte'
+    import { navigate } from 'svelte-native'
+    import {SecureStorage} from "@nativescript/secure-storage"
+    import ClientDetail from "./ClientDetail.svelte";
 
+    let secureStorage = new SecureStorage()
     let clients = []
     let authToken;
 
     onMount( async () =>{
-        userToken.subscribe((data) =>{
-        authToken = data.Token
-        })
+        authToken = secureStorage.getSync({
+                key: "authToken"
+            });
     
         const res = await fetch("http://10.0.2.2:8080/client-list/", {
             method: 'Get',
@@ -25,19 +30,35 @@
 
     });
 
+    function onClientTap(event) {
+    navigate({
+      page: ClientDetail,
+      props: { clientPk: clients[event.index].pk }
+    })
+  }
+
 </script>
 
 <page>
-    <stackLayout>
-        <label> placeholder for clientoverview</label>
-        <listView items="{clients}">
-            <Template let:item>
-                <label text="{item.user_ref.username}" />
-            </Template>
-        </listView>
-    </stackLayout>
+    <ClientTemplate>
+        <stackLayout>
+            <label> placeholder for clientoverview</label>
+            <listView items="{clients}" on:itemTap="{onClientTap}">
+                <Template let:item>
+                    <gridLayout columns="300, 100">
+                        <label text="{item.user_ref.first_name} {item.user_ref.last_name}" col="0"/>
+                        <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" col="1"/>
+                    </gridLayout>
+                </Template>
+            </listView>
+        </stackLayout>
+    </ClientTemplate>
 </page>
 
 <style>
-
+    .profileImage{
+        height: 100px;
+        width: 100px;
+        border-radius: 50%;
+    }
 </style>

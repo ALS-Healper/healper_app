@@ -1,34 +1,45 @@
 <script>
     import { Observable } from "@nativescript/core";
+    import {SecureStorage} from "@nativescript/secure-storage"
     import { onMount } from "svelte";
-    import Template from "../components/Template.svelte"
+    import Template from "../components/ClientTemplate.svelte"
     import { formatDates } from "../store/timehandler.js"
 
-    
-let testData = new Observable();
-testData.data = [{date: "17/11/2022", value: 4}, {date: "18/11/2022", value: 6}, {date: "19/11/2022", value: 5}, {date: "20/11/2022", value: 8}]    
-let answersList = []
-let client = {username: "Loading username...", email: "Loading email..."}
-let therapist = {username: "Loading therapist..."};
-let choiceAnswers = []
-let inputAswers = []
-let numericAnswers = []
 
-onMount( async () => {
-    const res = await fetch("http://10.0.2.2:8080/questionEntries/")
-    const data = await res.json()
+    export let clientPk
+   
+    let secureStorage = new SecureStorage()
+    let client = {username: "Loading username...", email: "Loading email..."}
+    let therapist = {username: "Loading therapist..."};
+    let choiceAnswers = []
+    let inputAswers = []
+    let numericAnswers = []
 
-    client = data.results[0].user_ref
-    therapist = data.results[0].thera.user_ref
-    choiceAnswers = data.results[0].choiceentries
-    inputAswers = data.results[0].inputentries
-    numericAnswers = data.results[0].numericentries
+    onMount( async () => {
+        let token = secureStorage.getSync({
+                key: "authToken"
+            });
 
-    if(choiceAnswers.length > 0){
+        const res = await fetch(`http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}`, {
+            method: 'Get',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`
+            }
+        })
+        const data = await res.json()
 
-    }
+        client = data.results[0].user_ref
+        therapist = data.results[0].thera.user_ref
+        choiceAnswers = data.results[0].choiceentries
+        inputAswers = data.results[0].inputentries
+        numericAnswers = data.results[0].numericentries
 
-});
+        if(choiceAnswers.length > 0){
+
+        }
+
+    });
 
 </script>
 
@@ -38,7 +49,7 @@ onMount( async () => {
             <label bind:text="{client.username}" class="selectionText" row="0" col="0"/>
             <stackLayout row="1" col="0" >
                 <label text="Email: {client.email}" class="infoText" />
-                <label text="Therapist: {therapist.username}" class="infoText" />
+                <label bind:text="{clientPk}" class="infoText" />
             </stackLayout>
             <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="1" rowSpan="2"/>
             <tabView row="2" col="0" colSpan="2">

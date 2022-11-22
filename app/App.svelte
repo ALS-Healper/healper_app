@@ -12,14 +12,14 @@
     let loginUser;
     let login = false;
     onMount(() => {
-        loginUser = secureStorage.getSync({
+        loginUser = JSON.parse(secureStorage.getSync({
                 key: "user"
-            });
+            }));
     })
     
 </script>
 {#if loginUser}
-    {#if loginUser.therapist[0].is_therapist}
+    {#if loginUser.therapist[0]}
         <frame actionBarVisibility="never">
         <TheraHome />
         </frame>
