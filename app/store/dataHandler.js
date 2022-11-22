@@ -12,7 +12,7 @@ async function getData(url, token){
 async function postData(url, data){
     const response = await fetch(url, {
         header: {
-            "content-type": "applikation/json"
+            "content-type": "application/json"
         },
         method: "POST",
         mode: "cors",

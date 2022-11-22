@@ -3,6 +3,7 @@
     import { onMount } from "svelte"
     import { navigate } from 'svelte-native'
     import { userToken, user } from '../store/userStore.js'
+    import { getData } from "../store/dataHandler.js"
     import Home from './Home.svelte'
     import App from '../App.svelte'
     let username;
@@ -21,6 +22,8 @@
         //secureStorage.get("authToken").then((value) => token = value)
         if(token){
             //secureStorage.get({key:"authToken"}).then((value) => token = value)
+
+            getData("http://10.0.2.2:8080/user-detail/", )
         
         const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
             method: 'Get',
@@ -37,7 +40,6 @@
         navigate({ page: Home }) 
         }
     })
-
 
 
 async function login(){

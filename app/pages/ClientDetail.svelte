@@ -3,12 +3,13 @@
     import {SecureStorage} from "@nativescript/secure-storage"
     import { onMount } from "svelte";
     import Template from "../components/ClientTemplate.svelte"
-    import { formatDates } from "../store/timehandler.js"
+    import { getData } from "../store/dataHandler.js"
 
 
-    export let clientPk
+    export let clientPk; 
    
     let secureStorage = new SecureStorage()
+    let clientQuestionEntries = []; 
     let client = {username: "Loading username...", email: "Loading email..."}
     let therapist = {username: "Loading therapist..."};
     let choiceAnswers = []
@@ -16,24 +17,27 @@
     let numericAnswers = []
 
     onMount( async () => {
-        let token = secureStorage.getSync({
+        let authToken = secureStorage.getSync({
                 key: "authToken"
             });
 
-        const res = await fetch(`http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}`, {
+        
+        clientQuestionEntries = getData("http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}", authToken)
+
+        /*const res = await fetch(`http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}`, {
             method: 'Get',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Token ${token}`
             }
         })
-        const data = await res.json()
+        const data = await res.json()*/
 
-        client = data.results[0].user_ref
-        therapist = data.results[0].thera.user_ref
-        choiceAnswers = data.results[0].choiceentries
-        inputAswers = data.results[0].inputentries
-        numericAnswers = data.results[0].numericentries
+        client = clientQuestionEntries.results[0].user_ref
+        therapist = clientQuestionEntries.results[0].thera.user_ref
+        choiceAnswers = clientQuestionEntries.results[0].choiceentries
+        inputAswers = clientQuestionEntries.results[0].inputentries
+        numericAnswers = clientQuestionEntries.results[0].numericentries
 
         if(choiceAnswers.length > 0){
 
