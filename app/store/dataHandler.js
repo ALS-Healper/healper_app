@@ -1,28 +1,26 @@
-async function getData(url, token){
+export const getData = async function getData(url, headers){
     const response =  await fetch(url, {
-        headers: {
-            "Content-type": "application/json",
-            "Authorization": `Token ${token}`
-        },
+        headers: headers,
         method: "GET"
     });
-    return await response.json(); 
+
+    const data = await response.json();
+    return data;
 };
 
-async function postData(url, data){
+export const postData = async function postData(url, headers, data){
     const response = await fetch(url, {
-        header: {
-            "content-type": "application/json"
-        },
+        headers: headers,
         method: "POST",
         mode: "cors",
-        body: {data}
+        body: JSON.stringify(data)
     });
 
-    return response.json();
+    const data1 = await response.json();
+    return data1;
 };
 
-function formatDates(stringDate){
+export const formatDates = function formatDates(stringDate){
 
     let date = new Date(stringDate);
 
@@ -31,5 +29,3 @@ function formatDates(stringDate){
     return formatDate;
 
 }
-
-export default {getData, postData, formatDates};

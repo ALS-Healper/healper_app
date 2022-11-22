@@ -3,39 +3,50 @@
     import { onMount } from "svelte"
     import { navigate } from 'svelte-native'
     import { userToken, user } from '../store/userStore.js'
-    import { getData } from "../store/dataHandler.js"
+    import { getData, postData } from "../store/dataHandler.js"
+    import { authHeaders, baseHeaders } from "../store/staticValues.js"
     import Home from './Home.svelte'
     import App from '../App.svelte'
+    let userDetail = [];
     let username;
     let password;
+    let aHeaders; 
+    let bHeaders; 
 
     let secureStorage = new SecureStorage()
 
 
     onMount(async ()=>{
-        //let token;
+
+        baseHeaders.subscribe((value) => {
+                bHeaders = value; 
+            });
+
+
+        authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${token}`;
+
+            });
+    
 
         let token = secureStorage.getSync({
                 key: "authToken"
             });
 
-        //secureStorage.get("authToken").then((value) => token = value)
-        if(token){
-            //secureStorage.get({key:"authToken"}).then((value) => token = value)
+            alert(token)
 
-            getData("http://10.0.2.2:8080/user-detail/", )
+        if(token){
+
+          userDetail = await getData("http://10.0.2.2:8080/user-detail/", {
+    "Content-Type": "application/json",
+    "Authorization": `Token ${token}`
+});
         
-        const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
-            method: 'Get',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
-            }
-        })
-        const data2 = await res2.json()
+
         secureStorage.set({
             key : "user",
-            value: JSON.stringify(data2.results[0])
+            value: JSON.stringify(userDetail.results[0])
         }).then((data) => console.log(data))
         navigate({ page: Home }) 
         }
@@ -43,22 +54,18 @@
 
 
 async function login(){
+    let loginDetails; 
     let token;
+    let data;
     secureStorage.get("authToken").then((value) => token = value)
 
     if(!token){
-    const res = await fetch('http://10.0.2.2:8080/api-token-auth/',  {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-                'Content-Type': 'application/json'
+
+        data = await postData("http://10.0.2.2:8080/api-token-auth/", {
+        "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                username: username,
-                password: password
-            })
-        })
-        const data = await res.json()
+            {username: username, password: password});
+
         userToken.set({'Token': data.token})
 
         secureStorage.set({
@@ -70,22 +77,19 @@ async function login(){
     else{
         secureStorage.get({key:"authToken"}).then((value) => token = value)
     }
-        
-        const res2 = await fetch('http://10.0.2.2:8080/user-detail/',  {
-            method: 'Get',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
-            }
-        })
-        const data2 = await res2.json()
+
+    loginDetails = await getData("http://10.0.2.2:8080/user-detail/", {
+    "Content-Type": "application/json",
+    "Authorization": `Token ${token}`
+});
+
+
         secureStorage.set({
             key : "user",
-            value: JSON.stringify(data2.results[0])
+            value: JSON.stringify(loginDetails.results[0])
         }).then((data) => console.log(data))
-        user.set({'user': data2.results[0]})
+        user.set({'user': loginDetails.results[0]})
         navigate({ page: Home }) 
-        
 
 }
 

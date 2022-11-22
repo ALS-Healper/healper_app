@@ -22,7 +22,7 @@
             });
 
         
-        clientQuestionEntries = getData("http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}", authToken)
+        clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}", authToken)
 
         /*const res = await fetch(`http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}`, {
             method: 'Get',
