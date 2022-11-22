@@ -1,59 +1,60 @@
 <script>
-    import {SecureStorage} from "@nativescript/secure-storage"
+    import {SecureStorage} from "@nativescript/secure-storage";
     import { onMount } from "svelte";
-    import Template from "../components/ClientTemplate.svelte"
-    import { formatDates } from "../store/dataHandler.js"
+    import ClientTemplate from "../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../components/ClientTemplate.svelte";
     import { getData } from "../store/dataHandler.js"
-
+    import { authHeaders } from "../store/staticValues.js";
 
     export let clientPk; 
-   
-    let secureStorage = new SecureStorage()
-    let clientQuestionEntries = []; 
+
+    let secureStorage = new SecureStorage();
+    let user = {client: [], therapist:[]};
     let client = {username: "Loading username...", email: "Loading email..."}
     let therapist = {username: "Loading therapist..."};
-    let choiceAnswers = []
-    let inputAswers = []
-    let numericAnswers = []
 
-    onMount( async () => {
-        let authToken = secureStorage.getSync({
+    let choiceAnswers = [];
+    let inputAswers = [];
+    let numericAnswers = [];
+    let authToken;
+    let aHeaders;
+
+    onMount(async () => {
+        user = JSON.parse(secureStorage.getSync({
+                key: "user"
+            })
+        );
+
+        if(user.client.length > 0){
+            clientPk = user.client[0].pk
+        }
+
+        authToken = secureStorage.getSync({
                 key: "authToken"
             });
 
-        
-        clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}", authToken)
+        authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${authToken}`;
+            });
 
-        /*const res = await fetch(`http://10.0.2.2:8080/questionEntries/?client_pk=${clientPk}`, {
-            method: 'Get',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${token}`
-            }
-        })
-        const data = await res.json()*/
+        let clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=" + clientPk, aHeaders);
 
-        client = clientQuestionEntries.results[0].user_ref
-        therapist = clientQuestionEntries.results[0].thera.user_ref
-        choiceAnswers = clientQuestionEntries.results[0].choiceentries
-        inputAswers = clientQuestionEntries.results[0].inputentries
-        numericAnswers = clientQuestionEntries.results[0].numericentries
-
-        if(choiceAnswers.length > 0){
-
-        }
-
+        client = clientQuestionEntries.results[0].user_ref;
+        therapist = clientQuestionEntries.results[0].thera.user_ref;
+        choiceAnswers = clientQuestionEntries.results[0].choiceentries;
+        inputAswers = clientQuestionEntries.results[0].inputentries;
+        numericAnswers = clientQuestionEntries.results[0].numericentries;
     });
 
 </script>
 
 <page actionBarHidden="true">
-    <Template>
+    <ClientTemplate>
         <gridLayout rows="50, 70, *" columns="250, *">
-            <label bind:text="{client.username}" class="selectionText" row="0" col="0"/>
+            <label text="{client.username}" class="selectionText" row="0" col="0"/>
             <stackLayout row="1" col="0" >
                 <label text="Email: {client.email}" class="infoText" />
-                <label bind:text="{clientPk}" class="infoText" />
             </stackLayout>
             <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="1" rowSpan="2"/>
             <tabView row="2" col="0" colSpan="2">
@@ -111,7 +112,7 @@
             
         </tabView>
         </gridLayout>
-    </Template>
+    </ClientTemplate>
 </page>
 
 <style>
@@ -119,7 +120,6 @@
         width: 1000px;
         margin-bottom: 500px;
     }
-
 
     splineSeries{
         fillColor: black;
@@ -152,7 +152,6 @@
     .graph-label{
         margin: 30;
         font-size: 25;
-        font-weight: bolder;
         color: white;
     }
 

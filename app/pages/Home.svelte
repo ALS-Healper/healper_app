@@ -1,35 +1,53 @@
 <script>
-    import RoleSelect from './RoleSelect.svelte'
-	import { navigate } from 'svelte-native'
+	import { navigate } from 'svelte-native';
+    import { SecureStorage } from "@nativescript/secure-storage";
+    import { StackLayout } from '@nativescript/core';
+    import { onMount } from "svelte";
+
     import Questionnaire from './Questionnaire.svelte'
     import Home from './Home.svelte'
     import ClientDetail from './ClientDetail.svelte'
-    import { StackLayout } from '@nativescript/core';
-
-    import Template from "../components/ClientTemplate.svelte"
-    import {SecureStorage} from "@nativescript/secure-storage"
     import LoginPage from './LoginPage.svelte';
+    import ClientTemplate from "../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../components/TherapistTemplate.svelte";
 
-let secureStorage = new SecureStorage()
+    let secureStorage = new SecureStorage()
+    let user = {client: [], therapist:[]};
 
-function logOut(){
-    secureStorage.removeAllSync()
-    navigate({
-      page: LoginPage
-    })
-}
-  
+    onMount(()=>{
+        user = JSON.parse(secureStorage.getSync({
+                key: "user"
+            })
+        );
+    });
+
+    function logOut(){
+        secureStorage.removeAllSync()
+        navigate({
+        page: LoginPage
+        })
+    }
 </script>
-
 <page actionBarHidden="true">
-        <Template>
-        <stackLayout rows="200, 100, *, 80" columns="*" horizontalAlignment="center" verticalAlignment="center">
-            <image src="~/static-resources/images/stock/healperlogo.png"/>
-            <label class="header" text="Healper"/>
-            <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
-            <button class="button" text="logout" on:tap="{logOut}"/>
-        </stackLayout>
-        </Template>
+    {#if user.therapist.length > 0}
+        <TherapistTemplate>
+            <stackLayout rows="200, 100, *, 80" columns="*" horizontalAlignment="center" verticalAlignment="center">
+                <image src="~/static-resources/images/stock/healperlogo.png"/>
+                <label class="header" text="Healper Therapist"/>
+                <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
+                <button class="button" text="logout" on:tap="{logOut}"/>
+            </stackLayout>
+        </TherapistTemplate>
+    {:else if user.client.length > 0}
+        <ClientTemplate>
+            <stackLayout rows="200, 100, *, 80" columns="*" horizontalAlignment="center" verticalAlignment="center">
+                <image src="~/static-resources/images/stock/healperlogo.png"/>
+                <label class="header" text="Healper Client"/>
+                <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
+                <button class="button" text="logout" on:tap="{logOut}"/>
+            </stackLayout>
+        </ClientTemplate>
+    {/if}
 </page>
 
 <style>

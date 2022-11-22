@@ -10,7 +10,7 @@
             <image src="~/static-resources/images/icons/home.png" class="icon" row="0" col="0" />
             <label text="Home" />
         </stackLayout>
-        <stackLayout on:tap="{ alert("No page yet") }" >
+        <stackLayout on:tap="{() => alert("No page yet")}" >
             <image src="~/static-resources/images/icons/sun.png" class="icon" row="0" col="0" />
             <label text="Temp" />
         </stackLayout>
@@ -18,7 +18,7 @@
             <image src="~/static-resources/images/icons/bar.png" class="icon" row="0" col="0" />
             <label text="Clients progress" />
         </stackLayout>
-        <stackLayout on:tap="{ alert("No page yet") }">
+        <stackLayout on:tap="{() => alert("No page yet")}">
             <image src="~/static-resources/images/icons/circle.png" class="icon" row="0" col="0" />
             <label text="Focus" />
         </stackLayout>

@@ -1,10 +1,18 @@
 <script>
-    import {SecureStorage} from "@nativescript/secure-storage"
+    import {SecureStorage} from "@nativescript/secure-storage";
+    import LoginPage from "./LoginPage.svelte";
 
-let secureStorage = new SecureStorage()
+let secureStorage = new SecureStorage();
+
+function logOut(){
+    secureStorage.removeAllSync();
+    navigate({
+      page: LoginPage
+    });
+};
 </script>
 
 <page>
     <label text="The rapist home 🙊" />
-    <button text="logout" on:tap="{() => secureStorage.removeSync({key: "token"})}"/>
+    <button class="button" text="logout" on:tap="{logOut}"/>
 </page>

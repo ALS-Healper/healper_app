@@ -1,8 +1,9 @@
 <script>
     import { goBack } from 'svelte-native'
     import { onMount } from 'svelte'
-    import Template from '../components/ClientTemplate.svelte'
-    import { userToken } from '../store/userStore.js'
+    import ClientTemplate from '../components/ClientTemplate.svelte'
+    import { getData, postData } from "../store/dataHandler.js"
+    import { authHeaders } from "../store/staticValues.js"
     import {SecureStorage} from "@nativescript/secure-storage"
 
     let currentQuestion = {question_text: "Loading questions"};
@@ -16,24 +17,23 @@
     let authToken;
     let user;
 
-    onMount(async ()=>{
+    let aHeaders; 
 
+    onMount(async ()=>{
         authToken = secureStorage.getSync({
                 key: "authToken"
             });
+
+        authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${authToken}`;
+            });
+
         user = JSON.parse(secureStorage.getSync({
                 key: "user"
             }));
 
-    
-       const res = await fetch("http://10.0.2.2:8080/questionnaires/", {
-            method: 'Get',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Token ${authToken}`
-            }
-        });
-       const data = await res.json()
+        const data = await getData("http://10.0.2.2:8080/questionnaires/", aHeaders)
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions]
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
        currentQuestion = data.results[0].inputquestions[0]
@@ -42,28 +42,27 @@
 
     function onAnswerTap(args){
         if(currentQuestion.optioninputs){
-            createQuestionEntry("http://10.0.2.2:8080/inputentries/",{response_text: inputAnswer, 
+            postData("http://10.0.2.2:8080/inputentries/",aHeaders, {response_text: inputAnswer, 
             creator: user.client[0].pk, 
             question: currentQuestion.pk         
-        })
+            });
         }
         else if(currentQuestion.optionchoices){
             const button = args.object
-            createQuestionEntry("http://10.0.2.2:8080/choiceentries/",{choice_value: button.text, 
+            postData("http://10.0.2.2:8080/choiceentries/", aHeaders, {choice_value: button.text, 
             creator: user.client[0].pk, 
             question: currentQuestion.pk         
-        })
+            });
         }
         else{
-            createQuestionEntry("http://10.0.2.2:8080/numericentries/",{response_value: sliderValue, 
+            postData("http://10.0.2.2:8080/numericentries/", aHeaders,{response_value: sliderValue, 
             creator: user.client[0].pk, 
             question: currentQuestion.pk          
-        })
-        }
+            });
+        };
         
         questionIndex += 1
         currentQuestion = questionIndex >= questionList.length ? {question_text: "Tak for dit svar"} : questionList[questionIndex]
-        //alert(questionIndex +" "+ currentQuestion.question_text)
     };
 
     async function createQuestionEntry(url, data) {
@@ -88,7 +87,7 @@
 </script>
 
 <page actionBarHidden="true">
-    <Template>
+    <ClientTemplate>
         <stackLayout>
             <image class="tobias" src="https://healper-static.s3.amazonaws.com/images/team-members/tobias.jpg"/>
             <label text="{currentQuestion.question_text}" class="questionText" textWrap="true" horizontal-align= "center"/>
@@ -122,7 +121,7 @@
             {/if}
             </flexBoxLayout>
         </stackLayout>
-    </Template>
+    </ClientTemplate>
 </page>
 
 <style>

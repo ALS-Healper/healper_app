@@ -2,39 +2,31 @@
     import { onMount } from "svelte";
     import { userToken } from '../store/userStore.js'
     import { Template } from 'svelte-native/components'
-    import ClientTemplate from '../components/ClientTemplate.svelte'
+    import TherapistTemplate from '../components/ClientTemplate.svelte'
     import { navigate } from 'svelte-native'
     import {SecureStorage} from "@nativescript/secure-storage"
     import ClientDetail from "./ClientDetail.svelte";
+    import { authHeaders } from "../store/staticValues.js"
+    import { getData } from "../store/dataHandler.js"
 
     let secureStorage = new SecureStorage()
     let clients = []
     let authToken;
+    let aHeaders;
 
     onMount( async () =>{
         authToken = secureStorage.getSync({
                 key: "authToken"
             });
-    
-            clientsFromFetch = getData("http://10.0.2.2:8080/client-list/", authToken)
 
-            clients.clientsFromFetch.results[0].clients
+        authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${authToken}`;
+            });
 
-
-
-/*const res = await fetch("http://10.0.2.2:8080/client-list/", {
-    method: 'Get',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${authToken}`
-    }
-});
-const data = await res.json()
-//alert(data.results[0].clients[0].user_ref.username)
-clients = data.results[0].clients
-//alert(clients)*/
-
-});
+        const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders)
+        clients = data.results[0].clients
+    });
 
     function onClientTap(event) {
     navigate({
@@ -46,7 +38,7 @@ clients = data.results[0].clients
 </script>
 
 <page>
-    <ClientTemplate>
+    <TherapistTemplate>
         <stackLayout>
             <label> placeholder for clientoverview</label>
             <listView items="{clients}" on:itemTap="{onClientTap}">
@@ -58,7 +50,7 @@ clients = data.results[0].clients
                 </Template>
             </listView>
         </stackLayout>
-    </ClientTemplate>
+    </TherapistTemplate>
 </page>
 
 <style>

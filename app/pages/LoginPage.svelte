@@ -15,86 +15,76 @@
 
     let secureStorage = new SecureStorage()
 
-
     onMount(async ()=>{
-
-        baseHeaders.subscribe((value) => {
-                bHeaders = value; 
-            });
-
-
-        authHeaders.subscribe((value) => {
-                aHeaders = value;
-                aHeaders.Authorization = `Token ${token}`;
-
-            });
-    
 
         let token = secureStorage.getSync({
                 key: "authToken"
             });
 
-            alert(token)
+        baseHeaders.subscribe((value) => {
+                bHeaders = value; 
+            });
 
         if(token){
+            
+            authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${token}`;
+            });
 
-          userDetail = await getData("http://10.0.2.2:8080/user-detail/", {
-    "Content-Type": "application/json",
-    "Authorization": `Token ${token}`
-});
-        
-
-        secureStorage.set({
-            key : "user",
-            value: JSON.stringify(userDetail.results[0])
-        }).then((data) => console.log(data))
-        navigate({ page: Home }) 
-        }
+            userDetail = await getData("http://10.0.2.2:8080/user-detail/", aHeaders);
+            
+            secureStorage.set({
+                key : "user",
+                value: JSON.stringify(userDetail.results[0])
+            })
+            .then((data) => console.log(data));
+            
+            navigate({ page: Home }); 
+        };
     })
 
 
 async function login(){
-    let loginDetails; 
-    let token;
     let data;
-    secureStorage.get("authToken").then((value) => token = value)
+    let token = secureStorage.getSync({
+                key: "authToken"
+            });
 
     if(!token){
-
-        data = await postData("http://10.0.2.2:8080/api-token-auth/", {
-        "Content-Type": "application/json",
-            },
-            {username: username, password: password});
-
-        userToken.set({'Token': data.token})
+        data = await postData("http://10.0.2.2:8080/api-token-auth/",
+            bHeaders,
+            {username: username, password: password}
+        );
 
         secureStorage.set({
             key : "authToken",
             value: data.token
-        }).then((data) => console.log(data))
+        })
+        .then((data) => console.log(data))
         token = data.token
+        authHeaders.subscribe((value) => {
+                aHeaders = value;
+                aHeaders.Authorization = `Token ${token}`;
+            });
     }
     else{
         secureStorage.get({key:"authToken"}).then((value) => token = value)
     }
 
-    loginDetails = await getData("http://10.0.2.2:8080/user-detail/", {
-    "Content-Type": "application/json",
-    "Authorization": `Token ${token}`
-});
+    const loginDetails = await getData("http://10.0.2.2:8080/user-detail/", aHeaders);
 
+    secureStorage.set({
+        key : "user",
+        value: JSON.stringify(loginDetails.results[0])
+        })
+        .then((data) => console.log(data))
 
-        secureStorage.set({
-            key : "user",
-            value: JSON.stringify(loginDetails.results[0])
-        }).then((data) => console.log(data))
-        user.set({'user': loginDetails.results[0]})
-        navigate({ page: Home }) 
+    //user.set({'user': loginDetails.results[0]})
+    navigate({ page: Home }) 
 
 }
-
 </script>
-
 <page actionBarHidden="true">
     <stackLayout class="top-section">
         <image src="~/static-resources/images/stock/healperlogo.png" class="logo"/>
@@ -118,7 +108,6 @@ async function login(){
 
 .header{
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
-    font-weight: bolder;
     font-size: 30px;
     border-radius: 1px solid black;
     color: rgb(45, 124, 124); 
