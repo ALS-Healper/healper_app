@@ -8,8 +8,16 @@
 
     import Template from "../components/ClientTemplate.svelte"
     import {SecureStorage} from "@nativescript/secure-storage"
+    import LoginPage from './LoginPage.svelte';
 
 let secureStorage = new SecureStorage()
+
+function logOut(){
+    secureStorage.removeAllSync()
+    navigate({
+      page: LoginPage
+    })
+}
   
 </script>
 
@@ -19,7 +27,7 @@ let secureStorage = new SecureStorage()
             <image src="~/static-resources/images/stock/healperlogo.png"/>
             <label class="header" text="Healper"/>
             <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
-            <button text="logout" on:tap="{() => secureStorage.removeAllSync()}"/>
+            <button class="button" text="logout" on:tap="{logOut}"/>
         </stackLayout>
         </Template>
 </page>
@@ -74,6 +82,17 @@ let secureStorage = new SecureStorage()
     image{
         width: 300px;
         height: 300px;
+    }
+
+    .button {
+        position: fixed;
+        bottom: 0;
+        width: 80%;
+        font-size: 18;
+        border-radius: 20px;
+        background-color: rgb(45, 124, 124);
+        color: white;
+        font-weight: bolder;
     }
 
 </style>
