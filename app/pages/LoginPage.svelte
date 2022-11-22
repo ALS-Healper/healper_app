@@ -39,7 +39,6 @@
     })
 
 
-
 async function login(){
     let token;
     secureStorage.get("authToken").then((value) => token = value)

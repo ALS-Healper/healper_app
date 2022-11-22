@@ -1,9 +1,8 @@
 <script>
-    import { Observable } from "@nativescript/core";
     import {SecureStorage} from "@nativescript/secure-storage"
     import { onMount } from "svelte";
     import Template from "../components/ClientTemplate.svelte"
-    import { formatDates } from "../store/timehandler.js"
+    import { formatDates } from "../store/dataHandler.js"
 
 
     export let clientPk
