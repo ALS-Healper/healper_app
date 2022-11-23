@@ -5,6 +5,8 @@
     import TherapistTemplate from "../components/ClientTemplate.svelte";
     import { getData } from "../store/dataHandler.js"
     import { authHeaders } from "../store/staticValues.js";
+    import { formatDates } from '../store/dataHandler.js';
+    import { StackLayout } from "@nativescript/core";
 
     export let clientPk; 
 
@@ -16,6 +18,7 @@
     let choiceAnswers = [];
     let inputAswers = [];
     let numericAnswers = [];
+    let numericAnswers1 = [];
     let authToken;
     let aHeaders;
 
@@ -44,45 +47,38 @@
         therapist = clientQuestionEntries.results[0].thera.user_ref;
         choiceAnswers = clientQuestionEntries.results[0].choiceentries;
         inputAswers = clientQuestionEntries.results[0].inputentries;
-        numericAnswers = clientQuestionEntries.results[0].numericentries;
+        numericAnswers = clientQuestionEntries.results[0].numericentries
+        numericAnswers = numericAnswers.map(function(currentObject) {
+            return {
+                response_value: currentObject.response_value,
+                entry_date: formatDates(currentObject.entry_date)
+            };
+        });
     });
 
 </script>
 
 <page actionBarHidden="true">
     <ClientTemplate>
-        <gridLayout rows="50, 70, *" columns="250, *">
-            <label text="{client.username}" class="selectionText" row="0" col="0"/>
-            <stackLayout row="1" col="0" >
-                <label text="Email: {client.email}" class="infoText" />
-            </stackLayout>
-            <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" row="0" col="1" rowSpan="2"/>
-            <tabView row="2" col="0" colSpan="2">
-                <tabViewItem title="Answers">
-                    <scrollView>
-                        <stackLayout>
-                            <label text="Choice questions" class="selectionText"/>
-                            {#each choiceAnswers as answer}
-                                <stackLayout>
-                                    <label text="{answer.question.question_text}" />
-                                    <label text="{answer.choice_value}" />
-                                </stackLayout>
-                            {/each}
-                            <label text="Input questions" class="selectionText"/>
-                            {#each inputAswers as answer}
-                                <stackLayout>
-                                    <label text="{answer.question.question_text}" />
-                                    <label text="{answer.response_text}" />
-                                </stackLayout>
-                            {/each}
-                            <label text="Numeric questions" class="selectionText"/>
-                            {#each numericAnswers as answer}
-                                <stackLayout>
-                                    <label text="{answer.question.question_text}" />
-                                    <label text="{answer.response_value}" />
-                                </stackLayout>
-                            {/each}
-                    </stackLayout>
+        <tabView>
+            <tabViewItem title="Info">
+                <scrollView>
+                    <stackLayout class="profilePage">
+                        <stackLayout class="profile-card">
+                            <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage"/>
+                            <label text="{client.first_name} {client.last_name}" class="selectionText"/>
+                            <stackLayout class="infoText">
+                                <label text="Allowed data access: Yes"/>
+                                <label text="Email: {client.email}"/>
+                                <label text="Phonenumber: xxxxxxxx"/>
+                                <label text="Questionnaire status: Waiting for answers"/>
+                                <label text="Next appointment: 27/11/2022 15:15"/>
+                            </stackLayout>
+                        </stackLayout>
+                        <stackLayout class="profile-card">
+                            <label text="Notes..."/>
+                        </stackLayout>
+                </stackLayout>
                 </scrollView>
             </tabViewItem>
             <tabViewItem title="Progress">
@@ -109,9 +105,7 @@
                     </stackLayout>
                 </scrollView>
             </tabViewItem>
-            
         </tabView>
-        </gridLayout>
     </ClientTemplate>
 </page>
 
@@ -127,22 +121,29 @@
         color: white;
         stroke-color: rgb(45, 124, 124); 
     }
-
     .selectionText{
-        font-size: 20;
-        horizontal-align: center;
-        vertical-align: center;
+        font-size: 25;
+        text-align: center;
+        font-style: oblique;
     }
     .infoText{
         font-size: 15;
-        horizontal-align: center;
-        vertical-align: center;
     }
     .profileImage {
         border-radius: 50%;
-        margin-top: 20px;
-        height: 200px;
-        width: 200px;
+        height: 20%;
+        width: 40%;
+    }
+    .profile-card{
+        background-color: white;
+        border-radius: 10%;
+        padding: 10%;
+        margin-top: 50px;
+        
+    }
+    .profilePage{
+        width: 80%;
+        
     }
 
     tabViewItem{
