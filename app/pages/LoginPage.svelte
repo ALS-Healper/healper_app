@@ -5,6 +5,7 @@
     import { userToken, user } from '../store/userStore.js'
     import { getData, postData } from "../store/dataHandler.js"
     import { authHeaders, baseHeaders } from "../store/staticValues.js"
+   
     import Home from './Home.svelte'
     import App from '../App.svelte'
     let userDetail = [];
@@ -12,6 +13,8 @@
     let password;
     let aHeaders; 
     let bHeaders; 
+    let url;
+    let sliderValue; 
 
     let secureStorage = new SecureStorage()
 
@@ -43,7 +46,6 @@
     "Authorization": `Token ${token}`
 });
         
-
         secureStorage.set({
             key : "user",
             value: JSON.stringify(userDetail.results[0])
@@ -78,12 +80,23 @@ async function login(){
         secureStorage.get({key:"authToken"}).then((value) => token = value)
     }
 
-    loginDetails = await getData("http://10.0.2.2:8080/user-detail/", {
-    "Content-Type": "application/json",
-    "Authorization": `Token ${token}`
-});
+    if(sliderValue){
 
+        url = "http://10.0.2.2:8080/client-detail/";
 
+    }else{
+
+        url = "http://10.0.2.2:8080/therapist-detail/";
+
+    };
+
+    loginDetails = await getData(url, {
+            "Content-Type": "application/json",
+            "Authorization": `Token ${token}`
+     });
+
+     if(loginDetails.results[0]){
+        
         secureStorage.set({
             key : "user",
             value: JSON.stringify(loginDetails.results[0])
@@ -91,7 +104,10 @@ async function login(){
         user.set({'user': loginDetails.results[0]})
         navigate({ page: Home }) 
 
-}
+     };
+
+};
+        
 
 </script>
 
@@ -102,10 +118,11 @@ async function login(){
             <label text="Healper" class="header"/>
             <textField hint="Email" bind:text="{username}" />
             <textField hint="Password" bind:text="{password}" secure="true" />
-        </stackLayout>
+    </stackLayout>
         <label class="shadow-down" verticalAlignment="top" />
         <button text="Login" on:tap="{login}"/>
         <button text="Signup"/>
+        <switch bind:checked={sliderValue} design="slider" options={['Client', 'Therapist']} fontSize={12}/>
     </stackLayout>
 </page>
 
@@ -161,6 +178,17 @@ button {
     background-color: rgb(45, 124, 124);
     color: white;
     font-weight: bolder;
+ }
+
+ switch{
+
+    width: 80%;
+    font-size: 25;
+    border-radius: 20px;
+    background-color: rgb(45, 124, 124);
+    color: white;
+    font-weight: bolder;
+
  }
 
  .logo{
