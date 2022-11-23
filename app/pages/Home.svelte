@@ -9,7 +9,7 @@
     import Dashboard from "../components/Dashboard.svelte";
 
     let secureStorage = new SecureStorage()
-    let user = {client: [], therapist:[]};
+    let user;
 
     onMount(()=>{
         user = JSON.parse(secureStorage.getSync({
@@ -26,42 +26,24 @@
     }
 </script>
 <page actionBarHidden="true">
-    {#if user.therapist.length > 0}
+    {#if user && user.is_therapist}
         <TherapistTemplate>
             <stackLayout rows="200, 100, *, 80" columns="*" horizontalAlignment="center" verticalAlignment="center">
                 <image src="~/static-resources/images/stock/healperlogo.png"/>
                 <label class="header" text="Healper Therapist"/>
                 <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
+                <button class="button" text="Logout" on:tap="{logOut}"/>
             </stackLayout>
         </TherapistTemplate>
-    {:else if user.client.length > 0}
+    {:else if user}
         <ClientTemplate>
                <Dashboard />  
         </ClientTemplate>
     {/if}
+    <label text="dsa"/>
 </page>
 
 <style>
-    .bottom-navigation{
-        background-color:rgba(252, 249, 244); 
-        justify-content: space-around;
-    }
-
-    .icon{
-        width: 50px;
-        height: 50px;
-        margin-bottom: 0;
-    }
-
-    .bottom-navigation stackLayout{
-        width: 25%;
-        border-color: black; 
-        border-width: 1;
-        color:  rgb(45, 124, 124); 
-        text-align: center;
-        align-items: center;
-    }
-
     .header{
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         font-weight: bolder;
