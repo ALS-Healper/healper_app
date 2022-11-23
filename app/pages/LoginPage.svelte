@@ -55,7 +55,8 @@
         }).then((data) => console.log(data))
         navigate({ page: Home }) 
         }
-    })
+    }
+});
 
 
 async function login(){
