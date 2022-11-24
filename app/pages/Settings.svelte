@@ -2,11 +2,14 @@
     import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
+    import { patchData } from "../store/dataHandler.js"
+    import { authHeaders } from "../store/staticValues.js"
 
     import LoginPage from "../pages/LoginPage.svelte"
 
     let secureStorage = new SecureStorage()
     let user = {client: [], therapist:[]};
+    let authToken;
     let switchEnabled;
 
     onMount(()=>{
@@ -14,6 +17,11 @@
                 key: "user"
             })
         );
+        switchEnabled = user.data_access
+
+        authToken = secureStorage.getSync({
+                key: "authToken"
+            })
     });
 
     function logOut(){
@@ -22,6 +30,20 @@
         page: LoginPage
         })
     }
+
+    async function onCheckedChange(){
+        let aHeaders;
+
+        authHeaders.subscribe((value)=>{
+            aHeaders = value
+            aHeaders.Authorization = `Token ${authToken}`
+        })
+        alert(switchEnabled)
+        let response = await patchData(`http://10.0.2.2:8080/client-detail/${user.pk}/`, 
+                                        aHeaders, 
+                                        {data_access: switchEnabled})
+    }
+
 </script>
 <page>
     <stackLayout class="settings-page">
@@ -42,7 +64,7 @@
                 <label class="section-header" text="Settings" />
                 <stackLayout class="section-item" orientation="horizontal">
                     <label text="Change Therapist permission"/>
-                    <switch bind:checked="{switchEnabled}"/>
+                    <switch bind:checked="{switchEnabled}" on:tap="{onCheckedChange}" />
                 </stackLayout>
             </stackLayout>
             <stackLayout class="section">

@@ -26,7 +26,7 @@
             });
 
         const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders)
-        clients = data.results[0].clients
+        clients = data.results
     });
 
     function onClientTap(event) {

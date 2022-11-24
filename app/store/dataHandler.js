@@ -20,6 +20,18 @@ export const postData = async function postData(url, headers, data){
     return data1;
 };
 
+export const patchData = async function patchData(url, headers, data){
+    const response = await fetch(url, {
+        headers: headers,
+        method: "PATCH",
+        mode: "cors",
+        body: JSON.stringify(data)
+    });
+
+    const data1 = await response.json();
+    return data1;
+};
+
 export const formatDates = function formatDates(stringDate){
 
     let date = new Date(stringDate);
