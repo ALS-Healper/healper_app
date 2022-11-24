@@ -23,15 +23,6 @@
     let aHeaders;
 
     onMount(async () => {
-        user = JSON.parse(secureStorage.getSync({
-                key: "user"
-            })
-        );
-
-        if(user.client.length > 0){
-            clientPk = user.client[0].pk
-        }
-
         authToken = secureStorage.getSync({
                 key: "authToken"
             });
@@ -41,6 +32,14 @@
                 aHeaders.Authorization = `Token ${authToken}`;
             });
 
+        user = JSON.parse(secureStorage.getSync({
+                key: "user"
+            }));
+
+        // if(user.client.length > 0){
+        //     clientPk = user.client[0].pk
+        // }
+            alert(JSON.stringify(user))
         let clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=" + clientPk, aHeaders);
 
         client = clientQuestionEntries.results[0].user_ref;
