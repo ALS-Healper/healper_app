@@ -95,11 +95,16 @@ async function login(){
             <label text="Healper" class="header"/>
             <textField hint="Email" bind:text="{username}" />
             <textField hint="Password" bind:text="{password}" secure="true" />
+            <label text="Login as:"/>
+            <flexBoxLayout justifyContent="center">
+            <label text="Therapist"/>
+            <switch bind:checked={sliderValue}/>
+            <label text="Client"/>
+            </flexBoxLayout> 
     </stackLayout>
         <label class="shadow-down" verticalAlignment="top" />
         <button text="Login" on:tap="{login}"/>
-        <button text="Signup"/>
-        <switch bind:checked={sliderValue} design="slider" options={['Client', 'Therapist']} fontSize={12}/>
+        <button text="Signup"/> 
     </stackLayout>
 </page>
 
@@ -126,7 +131,6 @@ async function login(){
         font-size: 20;
         vertical-align: center;
         text-align: center;
-        margin-bottom: 8%;
     }
 
     .shadow-down {
@@ -148,7 +152,6 @@ async function login(){
 
     button {
         width: 80%;
-        
         font-size: 25;
         border-radius: 20px;
         background-color: rgb(45, 124, 124);
@@ -156,20 +159,19 @@ async function login(){
         font-weight: bolder;
     }
 
-    switch{
+    /*.switch-layout{
+        height: 10%;
+        width: 100%;
+    }*/
 
-        width: 80%;
-        font-size: 25;
-        border-radius: 20px;
+    switch{
         background-color: rgb(45, 124, 124);
         color: white;
-        font-weight: bolder;
-
     }
 
     .logo{
         height: 30%;
         width: 70%;
-        margin: 10%;
+        margin: 8%;
     }
 </style>
