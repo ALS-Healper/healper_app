@@ -8,6 +8,7 @@
     import ClientDetail from "./ClientDetail.svelte";
     import { authHeaders } from "../store/staticValues.js"
     import { getData } from "../store/dataHandler.js"
+    import { StackLayout } from "@nativescript/core";
 
     let secureStorage = new SecureStorage()
     let clients = []
@@ -40,13 +41,17 @@
 <page>
     <TherapistTemplate>
         <stackLayout>
-            <label> placeholder for clientoverview</label>
-            <listView items="{clients}" on:itemTap="{onClientTap}">
+            <searchBar hint="Search" >
+            </searchBar>
+            <listView items="{clients}" on:itemTap="{onClientTap}" height="100%">
                 <Template let:item>
-                    <gridLayout columns="300, 100">
-                        <label text="{item.user_ref.first_name} {item.user_ref.last_name}" col="0"/>
-                        <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage" col="1"/>
-                    </gridLayout>
+                    <stackLayout orientation="horizontal">
+                        <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="client-image"/>
+                        <stackLayout>
+                            <label text="{item.user_ref.first_name} {item.user_ref.last_name}" class="client-name"/>
+                            
+                        </stackLayout>
+                    </stackLayout>
                 </Template>
             </listView>
         </stackLayout>
@@ -54,9 +59,15 @@
 </page>
 
 <style>
-    .profileImage{
-        height: 100px;
-        width: 100px;
+    .client-image{
+        height: 15%;
+        width: 15%;
         border-radius: 50%;
+        margin-right: 5%;
+        margin-top: 0;
+    }
+    .client-name{
+        font-size: 17;
+        font-weight: bold;
     }
 </style>
