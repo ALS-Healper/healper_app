@@ -10,7 +10,7 @@ export const notification = function(){
             body: "Hello guys",
             ticker: "The ticker",
             at: new Date(new Date().getTime() + 5 * 1000),
-            interval: 'minute'
+            interval: 'hour'
         }
     ])
 }

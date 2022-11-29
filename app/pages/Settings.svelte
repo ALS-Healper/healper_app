@@ -38,10 +38,14 @@
             aHeaders = value
             aHeaders.Authorization = `Token ${authToken}`
         })
-        alert(switchEnabled)
         let response = await patchData(`http://10.0.2.2:8080/client-detail/${user.pk}/`, 
                                         aHeaders, 
-                                        {data_access: switchEnabled})
+                                        {data_access: !switchEnabled})
+        user.data_access = switchEnabled
+        secureStorage.set({
+            key : "user",
+            value: JSON.stringify(user)
+        }).then((data) => console.log(data))
     }
 
 </script>
