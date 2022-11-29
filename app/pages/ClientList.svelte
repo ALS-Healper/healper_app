@@ -27,7 +27,7 @@
             });
 
         const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders)
-        clients = data.results[0].clients
+        clients = data.results
     });
 
     function onClientTap(event) {
@@ -51,6 +51,7 @@
                             <label text="{item.user_ref.first_name} {item.user_ref.last_name}" class="client-name"/>
                             <label text="{item.user_ref.username}" class="client-text"/>
                             <label text="{item.user_ref.email}" class="client-text"/>
+                            <!-- <label text="Data access: {item.data_access}" class="client-text"/> -->
                         </stackLayout>
                     </stackLayout>
                 </Template>
