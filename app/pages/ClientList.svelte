@@ -2,19 +2,20 @@
     import { onMount } from "svelte";
     import { userToken } from '../store/userStore.js'
     import { Template } from 'svelte-native/components'
-    import TherapistTemplate from '../components/ClientTemplate.svelte'
+    import TherapistTemplate from '../components/TherapistTemplate.svelte'
     import { navigate } from 'svelte-native'
     import {SecureStorage} from "@nativescript/secure-storage"
     import ClientDetail from "./ClientDetail.svelte";
     import { authHeaders } from "../store/staticValues.js"
     import { getData } from "../store/dataHandler.js"
     import { StackLayout } from "@nativescript/core";
+    import {Color} from '@nativescript/core/color'
 
     let secureStorage = new SecureStorage()
     let clients = []
     let authToken;
     let aHeaders;
-
+    //const color = new Color(2, 12, 200, 23, "rgb")
     onMount( async () =>{
         authToken = secureStorage.getSync({
                 key: "authToken"
@@ -26,7 +27,7 @@
             });
 
         const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders)
-        clients = data.results
+        clients = data.results[0].clients
     });
 
     function onClientTap(event) {
@@ -41,15 +42,15 @@
 <page>
     <TherapistTemplate>
         <stackLayout>
-            <searchBar hint="Search" >
-            </searchBar>
+            <searchBar hint="Search" />
             <listView items="{clients}" on:itemTap="{onClientTap}" height="100%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
                         <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="client-image"/>
-                        <stackLayout>
+                        <stackLayout verticalAlignment="middle" style="padding: 0%;">
                             <label text="{item.user_ref.first_name} {item.user_ref.last_name}" class="client-name"/>
-                            
+                            <label text="{item.user_ref.username}" class="client-text"/>
+                            <label text="{item.user_ref.email}" class="client-text"/>
                         </stackLayout>
                     </stackLayout>
                 </Template>
@@ -69,5 +70,11 @@
     .client-name{
         font-size: 17;
         font-weight: bold;
+        padding-top: 0%;
+        padding-bottom: 0%;
+    }
+    .client-text{
+        padding-top: 0%;
+        padding-bottom: 0%;
     }
 </style>
