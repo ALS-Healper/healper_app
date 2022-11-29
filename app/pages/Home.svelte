@@ -2,6 +2,7 @@
 	import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
+    import { notification } from '~/store/notifications';
 
     import LoginPage from './LoginPage.svelte';
     import ClientTemplate from "../components/ClientTemplate.svelte";
@@ -24,6 +25,7 @@
         page: LoginPage
         })
     }
+    notification()
 </script>
 <page actionBarHidden="true">
     {#if user && user.is_therapist}
