@@ -31,10 +31,16 @@
     });
 
     function onClientTap(event) {
-    navigate({
-      page: ClientDetail,
-      props: { clientPk: clients[event.index].pk }
-    })
+        const client = clients[event.index]
+        if (client.data_access === true){
+            navigate({
+                page: ClientDetail,
+                props: { clientPk: clients[event.index].pk }
+                })
+        }
+        else{
+            alert("You do not have access to this Client!")
+        }
   }
 
 </script>
@@ -53,6 +59,9 @@
                             <label text="{item.user_ref.email}" class="client-text"/>
                             <!-- <label text="Data access: {item.data_access}" class="client-text"/> -->
                         </stackLayout>
+                        {#if item.data_access != true}
+                            <image src="~/static-resources/images/icons/block.png" class="icon" horizontalAlignment="right"/>
+                        {/if}
                     </stackLayout>
                 </Template>
             </listView>
@@ -77,5 +86,12 @@
     .client-text{
         padding-top: 0%;
         padding-bottom: 0%;
+    }
+
+    .icon{
+        width: 100px;
+        height: 100px;
+        margin-bottom: 0;
+        color: red;
     }
 </style>
