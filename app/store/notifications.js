@@ -43,7 +43,7 @@ export const notification = async function(){
             title: notification.title,
             body: notification.text,
             at: new Date(new Date().getTime() + 5 * 1000),
-            interval: 'minute' //notification.interval.interval_type
+            interval: 'hour'
         }
     ])
 }
