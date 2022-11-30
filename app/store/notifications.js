@@ -1,16 +1,49 @@
 import { LocalNotifications } from "@nativescript/local-notifications";
+import {SecureStorage} from "@nativescript/secure-storage";
+import { authHeaders } from "../store/staticValues.js";
+import { getData } from "../store/dataHandler.js"
 
 LocalNotifications.hasPermission();
 
-export const notification = function(){
+export const notification = async function(){
+    let notification;
+    let secureStorage = new SecureStorage();
+    let authToken;
+    let aHeaders;
+    let date = new Date()
+    let currentDay = date.getDay();
+    // var date, daytoset; // given: a Date object and a integer representing the week day
+
+    // var currentDay = date.getDay();
+    // var distance = daytoset - currentDay;
+    // date.setDate(date.getDate() + distance);
+    // var distance = (daytoset + 7 - currentDay) % 7;
+    
+    authToken = secureStorage.getSync({
+        key: "authToken"
+    });
+
+    authHeaders.subscribe((value) => {
+        aHeaders = value;
+        aHeaders.Authorization = `Token ${authToken}`;
+    });
+
+    const data = await getData("http://10.0.2.2:8080/notifications/", aHeaders)
+    notification = data.results[0]
+    //alert(JSON.stringify(notification))
+
+    //let distance = (notification.interval.day_of_week - currentDay) // This week
+    let distance = (notification.interval.day_of_week + 7 - currentDay) % 7 // Next week
+    date.setDate(date.getDate() + distance)
+    alert(date)
+
     LocalNotifications.schedule([
         {
             id:1, 
-            title: "Healper",
-            body: "Hello guys",
-            ticker: "The ticker",
+            title: notification.title,
+            body: notification.text,
             at: new Date(new Date().getTime() + 5 * 1000),
-            interval: 'minute'
+            interval: 'minute' //notification.interval.interval_type
         }
     ])
 }
