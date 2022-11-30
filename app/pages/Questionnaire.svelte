@@ -16,7 +16,6 @@
     let sliderValue = 0;
     let authToken;
     let user;
-
     let aHeaders; 
 
     onMount(async ()=>{
