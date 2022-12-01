@@ -25,7 +25,7 @@
         page: LoginPage
         })
     }
-    //notification()
+    notification()
 </script>
 <page actionBarHidden="true">
     {#if user && user.is_therapist}

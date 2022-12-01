@@ -12,13 +12,8 @@ export const notification = async function(){
     let aHeaders;
     let date = new Date()
     let currentDay = date.getDay();
-    // var date, daytoset; // given: a Date object and a integer representing the week day
+    let currentTime = date.getTime();
 
-    // var currentDay = date.getDay();
-    // var distance = daytoset - currentDay;
-    // date.setDate(date.getDate() + distance);
-    // var distance = (daytoset + 7 - currentDay) % 7;
-    
     authToken = secureStorage.getSync({
         key: "authToken"
     });
@@ -30,22 +25,49 @@ export const notification = async function(){
 
     const data = await getData("http://10.0.2.2:8080/notifications/", aHeaders)
     notification = data.results[0]
-    //alert(JSON.stringify(notification))
 
-    //let distance = (notification.interval.day_of_week - currentDay) // This week
-    let distance = (notification.interval.day_of_week + 7 - currentDay) % 7 // Next week
-    date.setDate(date.getDate() + distance)
-    alert(date)
+    let timeElements = notification.interval.time_of_day.split(":")
+    date.setHours(timeElements[0])
+    date.setMinutes(timeElements[1])
+    date.setSeconds(timeElements[2])
 
+    switch(notification.interval.interval_type){
+        case "week":
+            let distance;
+            if(notification.interval.day_of_week < currentDay){distance = (notification.interval.day_of_week + 7 - currentDay)}
+            else{distance = (notification.interval.day_of_week - currentDay)}
+            date.setDate(date.getDate() + distance)
+        break;
+        case "month":
+            if(date.getDate() > notification.interval.day_of_month){
+                date.setMonth(date.getMonth() + 1)
+            }
+            date.setDate(notification.interval.day_of_month)
+        break;
+        case "year":
+            if(date.getMonth() > notification.interval.month_of_year){
+                date.setFullYear(date.getFullYear() + 1)
+            }
+            else if(date.getMonth() === notification.interval.month_of_year){
+                if(date.getDate() > notification.interval.day_of_month){
+                    date.setFullYear(date.getFullYear() + 1)
+                }
+            }
+        break;
+    }
+    //alert(date)
     LocalNotifications.schedule([
         {
             id:1, 
             title: notification.title,
             body: notification.text,
-            at: new Date(new Date().getTime() + 5 * 1000),
-            interval: 'hour'
+            at: date,
+            interval: notification.interval.interval_type
         }
     ])
+    if(currentTime > date.getTime()){
+        LocalNotifications.cancel(1)
+    }
 }
 
 // LocalNotifications.schedule([
