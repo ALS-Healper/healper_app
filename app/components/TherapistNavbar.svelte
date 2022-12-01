@@ -2,6 +2,7 @@
 	import { navigate } from 'svelte-native'
     import Home from '../pages/Home.svelte'
     import ClientList from '~/pages/ClientList.svelte'
+    import QuestionForm from "~/pages/QuestionForm.svelte"
 
 </script>
 <dockLayout height="100%">
@@ -18,7 +19,7 @@
             <image src="~/static-resources/images/icons/bar.png" class="icon" row="0" col="0" />
             <label text="Clients progress" />
         </stackLayout>
-        <stackLayout on:tap="{() => alert("No page yet")}">
+        <stackLayout on:tap="{() => navigate({page: QuestionForm})}">
             <image src="~/static-resources/images/icons/circle.png" class="icon" row="0" col="0" />
             <label text="Focus" />
         </stackLayout>
