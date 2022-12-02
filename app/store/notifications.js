@@ -5,14 +5,13 @@ import { getData } from "../store/dataHandler.js"
 
 LocalNotifications.hasPermission();
 
-export const notification = async function(){
+export const setupNotifications = async function(isCancled){
     let notification;
     let secureStorage = new SecureStorage();
     let authToken;
     let aHeaders;
-    let date = new Date()
-    let currentDay = date.getDay();
-    let currentTime = date.getTime();
+    let date = new Date();
+    let currentDate = new Date(date);
 
     authToken = secureStorage.getSync({
         key: "authToken"
@@ -32,30 +31,39 @@ export const notification = async function(){
     date.setSeconds(timeElements[2])
 
     switch(notification.interval.interval_type){
+        case "day":
+            if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 1)
+            else if(isCancled) date.setDate(date.getDate() + 1)
+        break;
         case "week":
             let distance;
-            if(notification.interval.day_of_week < currentDay){distance = (notification.interval.day_of_week + 7 - currentDay)}
-            else{distance = (notification.interval.day_of_week - currentDay)}
+            if(notification.interval.day_of_week < currentDate.getDay()){distance = (notification.interval.day_of_week + 7 - currentDate.getDay())}
+            else{distance = (notification.interval.day_of_week - currentDate.getDay())}
             date.setDate(date.getDate() + distance)
+            if(date.getDate() == currentDate.getDate()){
+                if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 7)
+            }
         break;
         case "month":
-            if(date.getDate() > notification.interval.day_of_month){
-                date.setMonth(date.getMonth() + 1)
-            }
+            if(date.getDate() > notification.interval.day_of_month){ date.setMonth(date.getMonth() + 1) }
             date.setDate(notification.interval.day_of_month)
+            if(date.getDate() == currentDate.getDate()){
+                if(currentDate.getTime() > date.getTime()) date.setMonth( date.getMonth() + 1)
+            }
         break;
         case "year":
-            if(date.getMonth() > notification.interval.month_of_year){
-                date.setFullYear(date.getFullYear() + 1)
-            }
+            if(date.getMonth() > notification.interval.month_of_year){ date.setFullYear(date.getFullYear() + 1) }
             else if(date.getMonth() === notification.interval.month_of_year){
                 if(date.getDate() > notification.interval.day_of_month){
                     date.setFullYear(date.getFullYear() + 1)
                 }
             }
+            if(date.getDate() == currentDate.getDate()){
+                if(currentDate.getTime() > date.getTime()) date.setFullYear( date.getFullYear() + 1)
+            }
         break;
     }
-    //alert(date)
+    alert(date)
     LocalNotifications.schedule([
         {
             id:1, 
@@ -65,10 +73,12 @@ export const notification = async function(){
             interval: notification.interval.interval_type
         }
     ])
-    if(currentTime > date.getTime()){
-        LocalNotifications.cancel(1)
-    }
 }
+
+// export const cancelQuestionnairNotification = async function(){
+//     LocalNotifications.cancel(1)
+//     alert("Notification has been cancled")
+// }
 
 // LocalNotifications.schedule([
 // 	{

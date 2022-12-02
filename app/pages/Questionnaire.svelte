@@ -1,10 +1,13 @@
 <script>
     import { goBack } from 'svelte-native'
+    import { navigate } from 'svelte-native';
     import { onMount } from 'svelte'
     import ClientTemplate from '../components/ClientTemplate.svelte'
     import { getData, postData } from "../store/dataHandler.js"
     import { authHeaders } from "../store/staticValues.js"
     import {SecureStorage} from "@nativescript/secure-storage"
+    //import { cancelQuestionnairNotification } from '~/store/notifications';
+    import Home from './Home.svelte'
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionIndex = 0;
@@ -42,20 +45,20 @@
     function onAnswerTap(args){
         if(currentQuestion.optioninputs){
             postData("http://10.0.2.2:8080/inputentries/",aHeaders, {response_text: inputAnswer, 
-            creator: user.client[0].pk, 
+            creator: user.pk, 
             question: currentQuestion.pk         
             });
         }
         else if(currentQuestion.optionchoices){
             const button = args.object
             postData("http://10.0.2.2:8080/choiceentries/", aHeaders, {choice_value: button.text, 
-            creator: user.client[0].pk, 
+            creator: user.pk, 
             question: currentQuestion.pk         
             });
         }
         else{
             postData("http://10.0.2.2:8080/numericentries/", aHeaders,{response_value: sliderValue, 
-            creator: user.client[0].pk, 
+            creator: user.pk, 
             question: currentQuestion.pk          
             });
         };
@@ -81,6 +84,14 @@
     function sliderValueChange(args){
         const slider = args.object
         sliderValue = slider.value
+    }
+
+    function finishAnswers(){
+        //cancelQuestionnairNotification()
+        navigate({
+        page: Home,
+        props: {isCancled: true}
+        })
     }
 
 </script>
@@ -116,7 +127,7 @@
                 <button text="Submit answer" class="button" on:tap={onAnswerTap} verticalAlignment="bottom"/>
                 {/each}
                 {:else}
-                    <button text="Back" class="button" on:tap="{goBack}" verticalAlignment="bottom"/>
+                    <button text="Back" class="button" on:tap="{finishAnswers}" verticalAlignment="bottom"/>
             {/if}
             </flexBoxLayout>
         </stackLayout>

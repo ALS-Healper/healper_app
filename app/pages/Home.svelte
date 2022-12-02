@@ -2,13 +2,13 @@
 	import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
-    import { notification } from '~/store/notifications';
+    import { setupNotifications } from '~/store/notifications';
 
     import LoginPage from './LoginPage.svelte';
     import ClientTemplate from "../components/ClientTemplate.svelte";
     import TherapistTemplate from "../components/TherapistTemplate.svelte";
     import Dashboard from "../components/Dashboard.svelte";
-
+    export let isCancled;
     let secureStorage = new SecureStorage()
     let user;
 
@@ -25,7 +25,7 @@
         page: LoginPage
         })
     }
-    notification()
+    setupNotifications(isCancled)
 </script>
 <page actionBarHidden="true">
     {#if user && user.is_therapist}
