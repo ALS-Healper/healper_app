@@ -6,10 +6,10 @@ import { getData } from "../store/dataHandler.js"
 LocalNotifications.hasPermission();
 
 export const setupNotifications = async function(isCancled){
-    let notification;
     let secureStorage = new SecureStorage();
     let authToken;
     let aHeaders;
+    let notification;
     let date = new Date();
     let currentDate = new Date(date);
 
@@ -32,38 +32,38 @@ export const setupNotifications = async function(isCancled){
 
     switch(notification.interval.interval_type){
         case "day":
-            if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 1)
-            else if(isCancled) date.setDate(date.getDate() + 1)
+            if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 1) // if notification is set to before current time add one day
+            else if(isCancled) date.setDate(date.getDate() + 1) // if it is cancled add one day
         break;
         case "week":
             let distance;
             if(notification.interval.day_of_week < currentDate.getDay()){distance = (notification.interval.day_of_week + 7 - currentDate.getDay())}
-            else{distance = (notification.interval.day_of_week - currentDate.getDay())}
-            date.setDate(date.getDate() + distance)
+            else{distance = (notification.interval.day_of_week - currentDate.getDay())} // Checking distance from current day and notification day
+            date.setDate(date.getDate() + distance)                                     // if distance is negative add 7 to notification day
             if(date.getDate() == currentDate.getDate()){
-                if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 7)
+                if(currentDate.getTime() > date.getTime()) date.setDate(date.getDate() + 7) // time check
             }
         break;
         case "month":
-            if(date.getDate() > notification.interval.day_of_month){ date.setMonth(date.getMonth() + 1) }
+            if(date.getDate() > notification.interval.day_of_month){ date.setMonth(date.getMonth() + 1) } // check if date has passed if yes add one month
             date.setDate(notification.interval.day_of_month)
             if(date.getDate() == currentDate.getDate()){
-                if(currentDate.getTime() > date.getTime()) date.setMonth( date.getMonth() + 1)
+                if(currentDate.getTime() > date.getTime()) date.setMonth( date.getMonth() + 1) // time check
             }
         break;
         case "year":
-            if(date.getMonth() > notification.interval.month_of_year){ date.setFullYear(date.getFullYear() + 1) }
+            if(date.getMonth() > notification.interval.month_of_year){ date.setFullYear(date.getFullYear() + 1) } // check if month has passed if yes add one year
             else if(date.getMonth() === notification.interval.month_of_year){
-                if(date.getDate() > notification.interval.day_of_month){
+                if(date.getDate() > notification.interval.day_of_month){ // check if date in month has passed if yes add one year
                     date.setFullYear(date.getFullYear() + 1)
                 }
             }
             if(date.getDate() == currentDate.getDate()){
-                if(currentDate.getTime() > date.getTime()) date.setFullYear( date.getFullYear() + 1)
+                if(currentDate.getTime() > date.getTime()) date.setFullYear( date.getFullYear() + 1) // time check
             }
         break;
     }
-    alert(date)
+    
     LocalNotifications.schedule([
         {
             id:1, 
