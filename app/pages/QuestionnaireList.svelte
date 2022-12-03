@@ -7,10 +7,9 @@
     import { authHeaders } from "../store/staticValues.js";
     import { getData } from "../store/dataHandler.js";
     import QuestionnaireDetails from "./QuestionnaireDetails.svelte";
-    import {user} from "../store/userStore.js"
 
     let secureStorage = new SecureStorage();
-    let questionnaires = [];
+    let questionnaires;
     let authToken;
     let aHeaders;
 
@@ -31,11 +30,10 @@
 
 
     function onQuestionnaireTap() {
-            navigate({
-                page: QuestionnaireDetails
-                });
-  };
-
+        navigate({
+            page: QuestionnaireDetails
+        });
+    };
 
 </script>
 

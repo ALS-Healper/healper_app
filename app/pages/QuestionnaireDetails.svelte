@@ -8,7 +8,7 @@
 
     let secureStorage = new SecureStorage();
     let user;
-    let questionList = [];
+    let questionList;
     let questionnaireQuestions = [];
     let authToken;
     let aHeaders;
@@ -34,20 +34,19 @@
             numericQuestions = data.results[0].numericquestions;
 
             questionList = [...inputQuestions, ...choiceQuestions, ...numericQuestions]
+            //alert(JSON.stringify(questionList[1]))
     });
-
 
     function onTap(){
         alert ("Her skal der kunne redigeres i spørgsmålet0,")
     }
-
+    
 </script>
 
 <page actionBarHidden="true">
     <TherapistTemplate>
-        <scrollView>
         <stackLayout>
-            <listView items="{questionList}" on:itemTap="{onTap}" height="100%">
+            <listView items="{questionList}" on:itemTap="{onTap}" height="90%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
                         <image src="~/static-resources/images/icons/fatass.png" class="icon" horizontalAlignment="right"/>
@@ -57,8 +56,8 @@
                     </stackLayout>
                 </Template>
             </listView>
+            <button text="+" />
         </stackLayout>
-        </scrollView>
     </TherapistTemplate>
 </page>
 
@@ -75,5 +74,14 @@
         height: 100px;
         margin-bottom: 0;
         color: red;
+    }
+
+    button {
+        width: 13%;
+        font-size: 25;
+        border-radius: 50%;
+        background-color: rgb(45, 124, 124);
+        color: white;
+        font-weight: bolder;
     }
 </style>
