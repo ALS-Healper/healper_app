@@ -1,12 +1,11 @@
 <script>
     import { closeModal } from "svelte-native";
-    import { postData } from "../store/dataHandler.js"
-    import { onMount } from "svelte"
+    import { postData } from "../store/dataHandler.js";
+    import { onMount } from "svelte";
     import { authHeaders } from "../store/staticValues.js";
-    import {SecureStorage} from "@nativescript/secure-storage"
+    import { SecureStorage } from "@nativescript/secure-storage";
   
-
-    let secureStorage = new SecureStorage()
+    let secureStorage = new SecureStorage();
     let inputAnswer;
     let button_text;
     let sliderQuestion; 
@@ -15,8 +14,6 @@
     let user; 
     
     export let question;
-
-    alert(user)
     
     onMount(async ()=>{
         authToken = secureStorage.getSync({
@@ -31,9 +28,7 @@
         user = JSON.parse(secureStorage.getSync({
                 key: "user"
             }));
-
     });
-
 
     function saveNewQuestion(){
         if(question === "input questions"){
@@ -51,7 +46,8 @@
             creator: user.pk,        
             });
         };
-        closeModal()
+
+        closeModal();
     };
 
 </script>
