@@ -3,13 +3,14 @@
     import { navigate } from 'svelte-native';
     import { onMount } from 'svelte'
     import ClientTemplate from '../components/ClientTemplate.svelte'
-    import { getData, postData } from "../store/dataHandler.js"
+    import { getData, postData, patchData } from "../store/dataHandler.js"
     import { authHeaders } from "../store/staticValues.js"
     import {SecureStorage} from "@nativescript/secure-storage"
     //import { cancelQuestionnairNotification } from '~/store/notifications';
     import Home from './Home.svelte'
 
     let currentQuestion = {question_text: "Loading questions"};
+    let questionnary_today;
     let questionIndex = 0;
     let questionList = [];
     let secureStorage = new SecureStorage()
@@ -35,7 +36,23 @@
                 key: "user"
             }));
 
+        //questionEntries/?completed_today=True&client_pk=1
+        const existingAnswer = await getData("http://10.0.2.2:8080/questionEntries/?completed_today=True&client_pk=" + user.pk, aHeaders)
         const data = await getData("http://10.0.2.2:8080/questionnaires/", aHeaders)
+        if(existingAnswer.results[0] && existingAnswer.results[0].is_completed){
+            alert("You already answered the diary for today")
+            navigate({
+                page: Home,
+                props: {isCancled: true}
+            });
+        }
+        else{
+            questionnary_today = await postData("http://10.0.2.2:8080/questionEntries/", aHeaders, {
+            creator: user.pk,
+            questionnaire: data.results[0].pk
+            });
+        }
+
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions]
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
        currentQuestion = data.results[0].inputquestions[0]
@@ -46,39 +63,28 @@
         if(currentQuestion.optioninputs){
             postData("http://10.0.2.2:8080/inputentries/",aHeaders, {response_text: inputAnswer, 
             creator: user.pk, 
-            question: currentQuestion.pk         
+            question: currentQuestion.pk,
+            questionnaire_entry: questionnary_today.pk         
             });
         }
         else if(currentQuestion.optionchoices){
             const button = args.object
             postData("http://10.0.2.2:8080/choiceentries/", aHeaders, {choice_value: button.text, 
             creator: user.pk, 
-            question: currentQuestion.pk         
+            question: currentQuestion.pk,
+            questionnaire_entry: questionnary_today.pk           
             });
         }
         else{
             postData("http://10.0.2.2:8080/numericentries/", aHeaders,{response_value: sliderValue, 
             creator: user.pk, 
-            question: currentQuestion.pk          
+            question: currentQuestion.pk,
+            questionnaire_entry: questionnary_today.pk             
             });
         };
         
         questionIndex += 1
         currentQuestion = questionIndex >= questionList.length ? {question_text: "Tak for dit svar"} : questionList[questionIndex]
-    };
-
-    async function createQuestionEntry(url, data) {
-        //alert(data.response_text)
-        const response = await fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${authToken}`
-            },
-            body: JSON.stringify(data) 
-        });
-     return response.json(); 
     };
 
     function sliderValueChange(args){
@@ -87,6 +93,9 @@
     }
 
     function finishAnswers(){
+        patchData("http://10.0.2.2:8080/questionEntries/"+questionnary_today.pk+"/?client_pk=" + user.pk, aHeaders, {
+            is_completed: true       
+            });
         //cancelQuestionnairNotification()
         navigate({
         page: Home,

@@ -15,10 +15,4 @@
     page, scrollView, stackLayout{
         background-color: transparent;
     }
-
-    .tobias{
-        border-radius: 50%;
-        height: 300px;
-        width: 300px;
-    }
 </style>

@@ -1,6 +1,6 @@
 <script>
     import { showModal } from "svelte-native";
-    import TherapistTemplate from "../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../components/TherapistTemplate.svelte";
     import ModalPage from "../components/ModalPage.svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { onMount } from "svelte";
@@ -57,6 +57,7 @@
         horizontal-align: center;
         vertical-align: center;
     }
+    
     .button {
         width: 30%;
         font-family: 20;
