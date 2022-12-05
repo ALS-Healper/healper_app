@@ -71,6 +71,14 @@
         });
         return barData
     }
+    import {FileSystemModule} from "@nativescript/core/file-system"
+    const documents = fileSystemModule.knownFolders.documents();
+    const folder = documents.getFolder(vm.get("documents") || "testFolder");
+
+    async function test(){
+        let pdf = await getData("http://10.0.2.2:8080/create-pdf/", aHeaders);
+    
+    }
 
 </script>
 
@@ -94,6 +102,7 @@
                         <stackLayout class="profile-card">
                             <label text="Notes..."/>
                         </stackLayout>
+                        <button on:tap="{test}" text="Make PDF"/>
                 </stackLayout>
                 </scrollView>
             </tabViewItem>

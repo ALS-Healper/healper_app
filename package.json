@@ -12,6 +12,7 @@
     "@nativescript/local-notifications": "^6.0.0",
     "@nativescript/secure-storage": "^3.0.0",
     "@nativescript/theme": "~3.0.2",
+    "jspdf": "^2.5.1",
     "nativescript-bottom-navigation": "^2.0.5",
     "nativescript-ui-chart": "^14.2.1",
     "svelte-native": "~1.0.0",
