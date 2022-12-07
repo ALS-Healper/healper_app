@@ -1,5 +1,5 @@
 <script>
-    import LoginPage from './pages/LoginPage.svelte'
+    import LoginPage from './pages/Shared/LoginPage.svelte'
 
 </script>
 <frame actionBarVisibility="never">

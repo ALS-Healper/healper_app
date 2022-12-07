@@ -1,7 +1,7 @@
 <script>
 	import { navigate } from 'svelte-native'
-    import Home from '../pages/Home.svelte'
-    import ClientList from '~/pages/ClientList.svelte'
+    import Home from '../pages/Shared/Home.svelte'
+    import ClientList from '~/pages/Therapist/ClientList.svelte'
     import QuestionnaireList from "~/pages/QuestionnaireList.svelte";
 
 </script>

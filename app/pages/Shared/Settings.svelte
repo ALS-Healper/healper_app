@@ -2,10 +2,10 @@
     import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
-    import { patchData } from "../store/dataHandler.js"
-    import { authHeaders } from "../store/staticValues.js"
+    import { patchData } from "../../store/dataHandler.js"
+    import { authHeaders } from "../../store/staticValues.js"
 
-    import LoginPage from "../pages/LoginPage.svelte"
+    import LoginPage from "./LoginPage.svelte"
 
     let secureStorage = new SecureStorage()
     let user = {client: [], therapist:[]};
@@ -66,10 +66,12 @@
             </stackLayout>
             <stackLayout class="section">
                 <label class="section-header" text="Settings" />
-                <stackLayout class="section-item" orientation="horizontal">
-                    <label text="Change Therapist permission"/>
-                    <switch bind:checked="{switchEnabled}" on:tap="{onCheckedChange}" />
-                </stackLayout>
+                {#if user.is_therapist}
+                    <stackLayout class="section-item" orientation="horizontal">
+                        <label text="Change Therapist permission"/>
+                        <switch bind:checked="{switchEnabled}" on:tap="{onCheckedChange}" />
+                    </stackLayout>
+                {/if}
             </stackLayout>
             <stackLayout class="section">
                 <label class="section-header" text="Information"/>

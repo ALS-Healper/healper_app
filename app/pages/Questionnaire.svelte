@@ -7,7 +7,7 @@
     import { authHeaders } from "../store/staticValues.js"
     import {SecureStorage} from "@nativescript/secure-storage"
     //import { cancelQuestionnairNotification } from '~/store/notifications';
-    import Home from './Home.svelte'
+    import Home from './Shared/Home.svelte'
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionnary_today;

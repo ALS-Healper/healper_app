@@ -2,12 +2,12 @@
     import {SecureStorage} from "@nativescript/secure-storage"
     import { onMount } from "svelte"
     import { navigate } from 'svelte-native'
-    import { userToken, user } from '../store/userStore.js'
-    import { getData, postData } from "../store/dataHandler.js"
-    import { authHeaders, baseHeaders } from "../store/staticValues.js"
+    import { userToken, user } from '../../store/userStore.js'
+    import { getData, postData } from "../../store/dataHandler.js"
+    import { authHeaders, baseHeaders } from "../../store/staticValues.js"
    
     import Home from './Home.svelte'
-    import App from '../App.svelte'
+    import App from '../../App.svelte'
 
     let username;
     let password;

@@ -1,10 +1,10 @@
 <script>
-	import { navigate } from 'svelte-native'
-    import Questionnaire from '../pages/Questionnaire.svelte'
-    import Home from '../pages/Home.svelte'
-    import ClientDetail from '../pages/ClientDetail.svelte'
+	import { navigate } from 'svelte-native';
+    import Questionnaire from '../pages/Questionnaire.svelte';
+    import Home from '../pages/Shared/Home.svelte';
+    import ClientDetail from "../pages/Shared/ClientDetail.svelte"
     import IconBox from './IconBox.svelte';
-    import Settings from '../pages/Settings.svelte'
+    import Settings from '../pages/Shared/Settings.svelte'
 
     function goToSettings(){
         navigate({ page: Settings })

@@ -1,12 +1,12 @@
 <script>
     import { onMount } from "svelte";
     import { Template } from 'svelte-native/components'
-    import TherapistTemplate from '../components/TherapistTemplate.svelte'
+    import TherapistTemplate from '../../components/TherapistTemplate.svelte'
     import { navigate } from 'svelte-native'
     import {SecureStorage} from "@nativescript/secure-storage"
-    import ClientDetail from "./ClientDetail.svelte";
-    import { authHeaders } from "../store/staticValues.js"
-    import { getData } from "../store/dataHandler.js"
+    import ClientDetail from "../Shared/ClientDetail.svelte";
+    import { authHeaders } from "../../store/staticValues.js"
+    import { getData } from "../../store/dataHandler.js"
 
     let secureStorage = new SecureStorage()
     let clients = []

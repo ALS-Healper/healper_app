@@ -5,9 +5,9 @@
     import { setupNotifications } from '~/store/notifications';
 
     import LoginPage from './LoginPage.svelte';
-    import ClientTemplate from "../components/ClientTemplate.svelte";
-    import TherapistTemplate from "../components/TherapistTemplate.svelte";
-    import Dashboard from "../components/Dashboard.svelte";
+    import ClientTemplate from "../../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../../components/TherapistTemplate.svelte";
+    import Dashboard from "../../components/Dashboard.svelte";
     export let isCancled;
     let secureStorage = new SecureStorage()
     let user;
