@@ -2,9 +2,12 @@
     import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
+
     import { patchData } from "../../store/dataHandler.js";
     import { authHeaders } from "../../store/staticValues.js";
+
     import LoginPage from "./LoginPage.svelte";
+    import Button from "../../components/Button.svelte";
 
     let secureStorage = new SecureStorage();
     let user = {client: [], therapist:[]};
@@ -84,7 +87,7 @@
                     <label text="App version: 0.0.1"/>
                 </stackLayout>
             </stackLayout>
-        <button class="button" text="Logout" on:tap="{logOut}"/>
+        <Button buttonText="Logout" onTapFunc={logOut}/>
     </stackLayout>
 </page>
 <style>
@@ -120,16 +123,6 @@
         align-items: center;
     }
 
-    .button {
-        position: fixed;
-        bottom: 0;
-        width: 80%;
-        font-size: 18;
-        border-radius: 20px;
-        background-color: rgb(45, 124, 124);
-        color: white;
-    }
-    
     .section-item{
         background-color:rgba(71, 73, 73, 0.188);
     }

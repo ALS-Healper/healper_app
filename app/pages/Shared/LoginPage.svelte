@@ -2,9 +2,12 @@
     import {SecureStorage} from "@nativescript/secure-storage";
     import { onMount } from "svelte";
     import { navigate } from "svelte-native";
+
     import { getData, postData } from "../../store/dataHandler.js";
     import { authHeaders, baseHeaders } from "../../store/staticValues.js";
+
     import Home from './Home.svelte';
+    import Button from "../../components/Button.svelte";
 
     let secureStorage = new SecureStorage();
 
@@ -97,8 +100,8 @@
             </flexBoxLayout> 
     </stackLayout>
         <label class="shadow-down" verticalAlignment="top" />
-        <button text="Login" on:tap="{login}"/>
-        <button text="Signup"/> 
+        <Button buttonText="Login" onTapFunc={login}/>
+        <Button buttonText="Signup"/>
     </stackLayout>
 </page>
 <style>
@@ -142,16 +145,7 @@
             border-radius: 10%;
             margin-bottom: 5%;
     }
-
-    button{
-        width: 80%;
-        font-size: 25;
-        border-radius: 20px;
-        background-color: rgb(45, 124, 124);
-        color: white;
-        font-weight: bolder;
-    }
-
+    
     switch{
         background-color: rgb(45, 124, 124);
         color: white;

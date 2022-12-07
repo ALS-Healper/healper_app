@@ -8,6 +8,8 @@
     import ClientTemplate from "../../components/ClientTemplate.svelte";
     import TherapistTemplate from "../../components/TherapistTemplate.svelte";
     import Dashboard from "../../components/Dashboard.svelte";
+    import Button from "../../components/Button.svelte";
+
     export let isCancled;
     let secureStorage = new SecureStorage();
     let user;
@@ -34,7 +36,7 @@
                 <image src="~/static-resources/images/stock/healperlogo.png"/>
                 <label class="header" text="Healper Therapist"/>
                 <label class="sub-header" textWrap="true" text="Your journey to a happier, healthier life starts now" />
-                <button class="button" text="Logout" on:tap="{logOut}"/>
+                <Button buttonText="Logout", onTapFunc={logOut}/>
             </stackLayout>
         </TherapistTemplate>
     {:else if user}
