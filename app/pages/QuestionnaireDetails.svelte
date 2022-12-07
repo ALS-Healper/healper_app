@@ -2,14 +2,14 @@
     import {SecureStorage} from "@nativescript/secure-storage";
     import { onMount } from "svelte";
     import TherapistTemplate from "../components/TherapistTemplate.svelte";
+    import QuestionForm from "./QuestionForm.svelte"
     import { getData } from "../store/dataHandler.js"
     import { authHeaders } from "../store/staticValues.js";
     import { Template } from "svelte-native/components";
+    import {navigate} from "svelte-native";
 
     let secureStorage = new SecureStorage();
-    let user;
     let questionList;
-    let questionnaireQuestions = [];
     let authToken;
     let aHeaders;
 
@@ -34,12 +34,14 @@
             numericQuestions = data.results[0].numericquestions;
 
             questionList = [...inputQuestions, ...choiceQuestions, ...numericQuestions]
-            //alert(JSON.stringify(questionList[1]))
+    
     });
 
     function onTap(){
-        alert ("Her skal der kunne redigeres i spørgsmålet0,")
-    }
+        navigate({
+            page: QuestionForm
+        });
+    };
     
 </script>
 
@@ -56,7 +58,7 @@
                     </stackLayout>
                 </Template>
             </listView>
-            <button text="+" />
+            <button text="+" on:tap="{onTap}"/>
         </stackLayout>
     </TherapistTemplate>
 </page>

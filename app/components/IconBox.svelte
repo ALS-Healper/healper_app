@@ -3,7 +3,7 @@
     export let handleTab;
 </script>
 <stackLayout on:tap="{handleTab}">
-    <image src="{imgUrl}" >
+    <image src="{imgUrl}">
 </stackLayout>
 <style>
     stackLayout{

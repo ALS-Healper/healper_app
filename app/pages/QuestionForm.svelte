@@ -1,6 +1,6 @@
 <script>
     import { showModal } from "svelte-native";
-    import TherapistTemplate from "../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../components/TherapistTemplate.svelte";
     import ModalPage from "../components/ModalPage.svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { onMount } from "svelte";
@@ -31,7 +31,7 @@
 
     });
 
-    function launchModal(pickedQuestion){
+    function launchModal(pickedQuestion, aHeaders, user){
         showModal({page: ModalPage, props: {question: pickedQuestion, header: aHeaders, user: user} });
     };
 
