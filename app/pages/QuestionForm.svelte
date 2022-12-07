@@ -57,6 +57,7 @@
         horizontal-align: center;
         vertical-align: center;
     }
+    
     .button {
         width: 30%;
         font-family: 20;

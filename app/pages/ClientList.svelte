@@ -1,6 +1,5 @@
 <script>
     import { onMount } from "svelte";
-    import { userToken } from '../store/userStore.js'
     import { Template } from 'svelte-native/components'
     import TherapistTemplate from '../components/TherapistTemplate.svelte'
     import { navigate } from 'svelte-native'
@@ -8,8 +7,6 @@
     import ClientDetail from "./ClientDetail.svelte";
     import { authHeaders } from "../store/staticValues.js"
     import { getData } from "../store/dataHandler.js"
-    import { StackLayout } from "@nativescript/core";
-    import {Color} from '@nativescript/core/color'
 
     let secureStorage = new SecureStorage()
     let clients = []
@@ -44,7 +41,6 @@
   }
 
 </script>
-
 <page>
     <TherapistTemplate>
         <stackLayout>
@@ -68,7 +64,6 @@
         </stackLayout>
     </TherapistTemplate>
 </page>
-
 <style>
     .client-image{
         height: 15%;

@@ -6,17 +6,17 @@
     import { getData } from "../store/dataHandler.js"
     import { authHeaders } from "../store/staticValues.js";
     import { formatDates } from '../store/dataHandler.js';
-    import { StackLayout } from "@nativescript/core";
 
-    export let clientPk; 
+    export let clientPk = null; 
 
     let secureStorage = new SecureStorage();
     let user = {client: [], therapist:[]};
-    let client = {username: "Loading username...", email: "Loading email..."}
+    let img_src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    let client = {first_name:"Loading firstname", last_name: "Loading lastname", username: "Loading username...", email: "Loading email..."}
     let therapist = {username: "Loading therapist..."};
 
     let choiceAnswers = [];
-    let inputAswers = [];
+    let inputAnswers = [];
     let numericAnswers = [];
     let numericAnswers1 = [];
     let authToken;
@@ -35,13 +35,22 @@
         user = JSON.parse(secureStorage.getSync({
                 key: "user"
             }));
-        let clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=" + clientPk, aHeaders);
 
-        client = clientQuestionEntries.results[0].user_ref;
-        therapist = clientQuestionEntries.results[0].thera.user_ref;
-        choiceAnswers = clientQuestionEntries.results[0].choiceentries;
-        inputAswers = clientQuestionEntries.results[0].inputentries;
-        numericAnswers = clientQuestionEntries.results[0].numericentries
+        if(!clientPk){
+            clientPk = user.pk
+        }
+        
+        let clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=" + clientPk, aHeaders);
+        let clientRes = await getData("http://10.0.2.2:8080/client-detail/" + clientPk + "/", aHeaders)
+        client = clientRes.user_ref;
+        if(client.img_url){
+            img_src = client.img_url
+        };
+        therapist = clientRes.thera.user_ref;
+        clientQuestionEntries.results.map(questionnaireEntry => choiceAnswers = [...choiceAnswers, ...questionnaireEntry.choiceentries])
+        choiceAnswers = createBarData(choiceAnswers);
+        clientQuestionEntries.results.map(questionnaireEntry => inputAnswers = [...inputAnswers, ...questionnaireEntry.inputentries]);
+        clientQuestionEntries.results.map(questionnaireEntry => numericAnswers = [...numericAnswers, ...questionnaireEntry.numericentries])
         numericAnswers = numericAnswers.map(function(currentObject) {
             return {
                 response_value: currentObject.response_value,
@@ -49,6 +58,27 @@
             };
         });
     });
+
+    function createBarData(listData){
+        let barData = [{choice: "Yes", amount: 0}, {choice: "No", amount: 0}];
+        listData.map((entry)=>{
+            if(entry.choice_value==="Yes"){
+                barData[0].amount+=1;
+            }
+            else{
+                barData[1].amount+=1;
+            };
+        });
+        return barData
+    }
+    import {FileSystemModule} from "@nativescript/core/file-system"
+    const documents = fileSystemModule.knownFolders.documents();
+    const folder = documents.getFolder(vm.get("documents") || "testFolder");
+
+    async function test(){
+        let pdf = await getData("http://10.0.2.2:8080/create-pdf/", aHeaders);
+    
+    }
 
 </script>
 
@@ -59,7 +89,7 @@
                 <scrollView>
                     <stackLayout class="profilePage">
                         <stackLayout class="profile-card">
-                            <image src="https://cdn-icons-png.flaticon.com/512/149/149071.png" class="profileImage"/>
+                            <image bind:src="{img_src}" class="profileImage"/>
                             <label text="{client.first_name} {client.last_name}" class="selectionText"/>
                             <stackLayout class="infoText">
                                 <label text="Allowed data access: Yes"/>
@@ -72,6 +102,7 @@
                         <stackLayout class="profile-card">
                             <label text="Notes..."/>
                         </stackLayout>
+                        <button on:tap="{test}" text="Make PDF"/>
                 </stackLayout>
                 </scrollView>
             </tabViewItem>
@@ -93,7 +124,8 @@
                             <categoricalAxis prop:horizontalAxis lineColor="white" lineThickness="4"/>
                             <linearAxis prop:verticalAxis lineColor="white" lineThickness="4"/>
                             <barSeries items="{choiceAnswers}" 
-                            categoryProperty="choice_value"
+                            categoryProperty="choice"
+                            valueProperty="amount" 
                             labelTextColor="white"/>
                         </radCartesianChart>
                     </stackLayout>
@@ -110,6 +142,13 @@
     }
 
     splineSeries{
+        fillColor: black;
+        stroke-width: 7;
+        color: white;
+        stroke-color: rgb(45, 124, 124); 
+    }
+
+    barSeries{
         fillColor: black;
         stroke-width: 7;
         color: white;
