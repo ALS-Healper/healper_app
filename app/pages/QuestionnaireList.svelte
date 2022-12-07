@@ -28,15 +28,12 @@
 
     });
 
-
     function onQuestionnaireTap() {
         navigate({
             page: QuestionnaireDetails
         });
     };
-
 </script>
-
 <page>
     <TherapistTemplate>
         <stackLayout>
@@ -53,7 +50,6 @@
         </stackLayout>
     </TherapistTemplate>
 </page>
-
 <style>
     .questionnaire-name{
         font-size: 17;

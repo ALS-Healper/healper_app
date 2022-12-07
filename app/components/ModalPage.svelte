@@ -5,7 +5,6 @@
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
     import IconBox from "./IconBox.svelte"
-    //import questionMark from "app/static-resources/images/icons/questionmark.png"
   
     let secureStorage = new SecureStorage();
     let inputAnswer;

@@ -9,7 +9,7 @@
     import TherapistTemplate from "../../components/TherapistTemplate.svelte";
     import Dashboard from "../../components/Dashboard.svelte";
     export let isCancled;
-    let secureStorage = new SecureStorage()
+    let secureStorage = new SecureStorage();
     let user;
 
     onMount(()=>{
@@ -24,8 +24,8 @@
         navigate({
         page: LoginPage
         })
-    }
-    setupNotifications(isCancled)
+    };
+    setupNotifications(isCancled);
 </script>
 <page actionBarHidden="true">
     {#if user && user.is_therapist}
@@ -39,12 +39,11 @@
         </TherapistTemplate>
     {:else if user}
         <ClientTemplate>
-               <Dashboard />  
+            <Dashboard />  
         </ClientTemplate>
     {/if}
     <label text="dsa"/>
 </page>
-
 <style>
     .header{
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
@@ -76,5 +75,4 @@
         width: 300px;
         height: 300px;
     }
-
 </style>

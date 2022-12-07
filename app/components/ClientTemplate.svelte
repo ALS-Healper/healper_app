@@ -1,10 +1,10 @@
 <script>
-    import Navbar from "./Navbar.svelte"
+    import ClientNavbar from "./ClientNavbar.svelte";
 </script>
 <page>
-    <Navbar>
+    <ClientNavbar>
         <slot />
-    </Navbar>
+    </ClientNavbar>
 </page>
 <style>
     page{

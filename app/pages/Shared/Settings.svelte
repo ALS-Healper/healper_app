@@ -2,12 +2,11 @@
     import { navigate } from 'svelte-native';
     import { SecureStorage } from "@nativescript/secure-storage";
     import { onMount } from "svelte";
-    import { patchData } from "../../store/dataHandler.js"
-    import { authHeaders } from "../../store/staticValues.js"
+    import { patchData } from "../../store/dataHandler.js";
+    import { authHeaders } from "../../store/staticValues.js";
+    import LoginPage from "./LoginPage.svelte";
 
-    import LoginPage from "./LoginPage.svelte"
-
-    let secureStorage = new SecureStorage()
+    let secureStorage = new SecureStorage();
     let user = {client: [], therapist:[]};
     let authToken;
     let switchEnabled;
@@ -29,7 +28,7 @@
         navigate({
         page: LoginPage
         })
-    }
+    };
 
     async function onCheckedChange(){
         let aHeaders;
@@ -37,17 +36,17 @@
         authHeaders.subscribe((value)=>{
             aHeaders = value
             aHeaders.Authorization = `Token ${authToken}`
-        })
+        });
+
         let response = await patchData(`http://10.0.2.2:8080/client-detail/${user.pk}/`, 
                                         aHeaders, 
-                                        {data_access: !switchEnabled})
-        user.data_access = switchEnabled
+                                        {data_access: !switchEnabled});
+        user.data_access = switchEnabled;
         secureStorage.set({
             key : "user",
             value: JSON.stringify(user)
-        }).then((data) => console.log(data))
-    }
-
+        }).then((data) => console.log(data));
+    };
 </script>
 <page>
     <stackLayout class="settings-page">
@@ -130,10 +129,7 @@
         background-color: rgb(45, 124, 124);
         color: white;
     }
-
-    .section{
-    }
-
+    
     .section-item{
         background-color:rgba(71, 73, 73, 0.188);
     }

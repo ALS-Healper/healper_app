@@ -1,24 +1,27 @@
 <script>
     import {SecureStorage} from "@nativescript/secure-storage";
     import { onMount } from "svelte";
-    import ClientTemplate from "../../components/ClientTemplate.svelte"
-    import TherapistTemplate from "../../components/TherapistTemplate.svelte"
-    import { getData } from "../../store/dataHandler.js"
+    import ClientTemplate from "../../components/ClientTemplate.svelte";
+    import TherapistTemplate from "../../components/TherapistTemplate.svelte";
+    import { getData } from "../../store/dataHandler.js";
     import { authHeaders } from "../../store/staticValues.js";
-    import { formatDates } from '../../store/dataHandler.js';
+    import { formatDates } from "../../store/dataHandler.js";
 
     export let clientPk = null; 
 
     let secureStorage = new SecureStorage();
     let user = {client: [], therapist:[]};
     let img_src = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-    let client = {first_name:"Loading firstname", last_name: "Loading lastname", username: "Loading username...", email: "Loading email..."}
+    let client = {first_name:"Loading firstname", 
+                last_name: "Loading lastname", 
+                username: "Loading username...", 
+                email: "Loading email..."
+                };
     let therapist = {username: "Loading therapist..."};
 
     let choiceAnswers = [];
     let inputAnswers = [];
     let numericAnswers = [];
-    let numericAnswers1 = [];
     let authToken;
     let aHeaders;
 
@@ -38,10 +41,10 @@
 
         if(!clientPk){
             clientPk = user.pk
-        }
+        };
         
         let clientQuestionEntries = await getData("http://10.0.2.2:8080/questionEntries/?client_pk=" + clientPk, aHeaders);
-        let clientRes = await getData("http://10.0.2.2:8080/client-detail/" + clientPk + "/", aHeaders)
+        let clientRes = await getData("http://10.0.2.2:8080/client-detail/" + clientPk + "/", aHeaders);
         client = clientRes.user_ref;
         if(client.img_url){
             img_src = client.img_url
@@ -70,15 +73,12 @@
             };
         });
         return barData
-    }
+    };
     
     async function test(){
         let pdf = await getData("http://10.0.2.2:8080/create-pdf/", aHeaders);
-    
     }
-
 </script>
-
 <page actionBarHidden="true">
     {#if user && !user.is_therapist}
         <ClientTemplate>
@@ -184,7 +184,6 @@
         </TherapistTemplate>
     {/if}
 </page>
-
 <style>
     radCartesianChart{
         width: 1000px;
@@ -238,5 +237,4 @@
         font-size: 25;
         color: white;
     }
-
 </style>

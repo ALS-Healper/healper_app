@@ -1,13 +1,12 @@
 <script>
-    import {SecureStorage} from "@nativescript/secure-storage"
-    import { onMount } from "svelte"
-    import { navigate } from 'svelte-native'
-    import { userToken, user } from '../../store/userStore.js'
-    import { getData, postData } from "../../store/dataHandler.js"
-    import { authHeaders, baseHeaders } from "../../store/staticValues.js"
-   
-    import Home from './Home.svelte'
-    import App from '../../App.svelte'
+    import {SecureStorage} from "@nativescript/secure-storage";
+    import { onMount } from "svelte";
+    import { navigate } from "svelte-native";
+    import { getData, postData } from "../../store/dataHandler.js";
+    import { authHeaders, baseHeaders } from "../../store/staticValues.js";
+    import Home from './Home.svelte';
+
+    let secureStorage = new SecureStorage();
 
     let username;
     let password;
@@ -15,10 +14,7 @@
     let bHeaders; 
     let sliderValue; 
 
-    let secureStorage = new SecureStorage()
-
     onMount(async ()=>{
-
         let token = secureStorage.getSync({
                 key: "authToken"
             });
@@ -27,66 +23,64 @@
             key: "user"
         });
 
-        if(token){
+        if(token && user){
             navigate({ page: Home }) 
         };
     });
 
+    async function login(){
+        let data;
+        let token = secureStorage.getSync({
+                    key: "authToken"
+                });
 
-async function login(){
-    let data;
-    let token = secureStorage.getSync({
-                key: "authToken"
+        if(!token){
+            baseHeaders.subscribe((value) => {
+                    bHeaders = value; 
+                });
+
+            data = await postData("http://10.0.2.2:8080/api-token-auth/",
+                bHeaders,
+                {username: username, password: password}
+            );
+
+            secureStorage.set({
+                key : "authToken",
+                value: data.token
+            })
+            .then((data) => console.log(data));
+            token = data.token;
+            
+            authHeaders.subscribe((value) => {
+                    aHeaders = value;
+                    aHeaders.Authorization = `Token ${token}`;
+                });
+        }
+        else{
+            secureStorage.get({key:"authToken"}).then((value) => token = value)
+        }
+
+        let url;
+        if(sliderValue){
+            url = "http://10.0.2.2:8080/client-detail/";
+        }
+        else{
+            url = "http://10.0.2.2:8080/therapist-detail/";
+        };
+
+        let loginDetails = await getData(url, {
+                "Content-Type": "application/json",
+                "Authorization": `Token ${token}`
             });
 
-    if(!token){
-        baseHeaders.subscribe((value) => {
-                bHeaders = value; 
-            });
-
-        data = await postData("http://10.0.2.2:8080/api-token-auth/",
-            bHeaders,
-            {username: username, password: password}
-        );
-
-        secureStorage.set({
-            key : "authToken",
-            value: data.token
-        })
-        .then((data) => console.log(data))
-        token = data.token
-        authHeaders.subscribe((value) => {
-                aHeaders = value;
-                aHeaders.Authorization = `Token ${token}`;
-            });
-    }
-    else{
-        secureStorage.get({key:"authToken"}).then((value) => token = value)
-    }
-
-    let url;
-    if(sliderValue){
-        url = "http://10.0.2.2:8080/client-detail/";
-    }
-    else{
-        url = "http://10.0.2.2:8080/therapist-detail/";
+        if(loginDetails.results[0].pk){
+            secureStorage.set({
+                key : "user",
+                value: JSON.stringify(loginDetails.results[0])
+            }).then((data) => console.log(data))
+            navigate({ page: Home }) 
+        };
     };
-
-    let loginDetails = await getData(url, {
-            "Content-Type": "application/json",
-            "Authorization": `Token ${token}`
-        });
-
-    if(loginDetails.results[0].pk){
-        secureStorage.set({
-            key : "user",
-            value: JSON.stringify(loginDetails.results[0])
-        }).then((data) => console.log(data))
-        navigate({ page: Home }) 
-     };
-};
-        
-
 </script>
 <page actionBarHidden="true">
     <stackLayout class="top-section">
@@ -97,9 +91,9 @@ async function login(){
             <textField hint="Password" bind:text="{password}" secure="true" />
             <label text="Login as:"/>
             <flexBoxLayout justifyContent="center">
-            <label text="Therapist"/>
-            <switch bind:checked={sliderValue}/>
-            <label text="Client"/>
+                <label text="Therapist"/>
+                <switch bind:checked={sliderValue}/>
+                <label text="Client"/>
             </flexBoxLayout> 
     </stackLayout>
         <label class="shadow-down" verticalAlignment="top" />
@@ -107,7 +101,6 @@ async function login(){
         <button text="Signup"/> 
     </stackLayout>
 </page>
-
 <style>
     .top-section{
     font-size: 20;
@@ -133,7 +126,7 @@ async function login(){
         text-align: center;
     }
 
-    .shadow-down {
+    .shadow-down{
         height: 8;
         background: linear-gradient(to bottom, rgba(0,0,0, .1), rgba(0,0,0, 0))
     }
@@ -150,7 +143,7 @@ async function login(){
             margin-bottom: 5%;
     }
 
-    button {
+    button{
         width: 80%;
         font-size: 25;
         border-radius: 20px;
@@ -158,11 +151,6 @@ async function login(){
         color: white;
         font-weight: bolder;
     }
-
-    /*.switch-layout{
-        height: 10%;
-        width: 100%;
-    }*/
 
     switch{
         background-color: rgb(45, 124, 124);

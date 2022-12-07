@@ -1,9 +1,8 @@
 <script>
-	import { navigate } from 'svelte-native'
-    import Home from '../pages/Shared/Home.svelte'
-    import ClientList from '~/pages/Therapist/ClientList.svelte'
+	import { navigate } from "svelte-native";
+    import Home from "../pages/Shared/Home.svelte";
+    import ClientList from "~/pages/Therapist/ClientList.svelte";
     import QuestionnaireList from "~/pages/QuestionnaireList.svelte";
-
 </script>
 <dockLayout height="100%">
     <stackLayout dock="bottom" class="bottom-navigation" orientation="horizontal">

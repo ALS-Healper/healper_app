@@ -1,20 +1,19 @@
 <script>
-	import { navigate } from 'svelte-native';
-    import Questionnaire from '../pages/Questionnaire.svelte';
-    import Home from '../pages/Shared/Home.svelte';
-    import ClientDetail from "../pages/Shared/ClientDetail.svelte"
-    import IconBox from './IconBox.svelte';
-    import Settings from '../pages/Shared/Settings.svelte'
+	import { navigate } from "svelte-native";
+    import Questionnaire from "../pages/Questionnaire.svelte";
+    import Home from "../pages/Shared/Home.svelte";
+    import ClientDetail from "../pages/Shared/ClientDetail.svelte";
+    import IconBox from "./IconBox.svelte";
+    import Settings from "../pages/Shared/Settings.svelte";
 
     function goToSettings(){
         navigate({ page: Settings })
-    }
-
+    };
 </script>
 <dockLayout height="100%">
     <stackLayout class="nav-header" orientation="horizontal" dock="top">
         <IconBox imgUrl="~/static-resources/images/icons/calendar.png" />
-        <image class="tobias" src="https://healper-static.s3.amazonaws.com/images/team-members/tobias.jpg"/>
+            <image class="tobias" src="https://healper-static.s3.amazonaws.com/images/team-members/tobias.jpg"/>
         <IconBox imgUrl="~/static-resources/images/icons/account.png" handleTab="{goToSettings}" />
     </stackLayout> 
     <stackLayout dock="bottom" class="bottom-navigation" orientation="horizontal">
@@ -70,5 +69,4 @@
         height: 300px;
         width: 300px;
     }
-
 </style>

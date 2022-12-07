@@ -1,18 +1,18 @@
 <script>
     import { onMount } from "svelte";
-    import { Template } from 'svelte-native/components'
-    import TherapistTemplate from '../../components/TherapistTemplate.svelte'
-    import { navigate } from 'svelte-native'
-    import {SecureStorage} from "@nativescript/secure-storage"
+    import { Template } from "svelte-native/components";
+    import TherapistTemplate from "../../components/TherapistTemplate.svelte";
+    import { navigate } from "svelte-native";
+    import {SecureStorage} from "@nativescript/secure-storage";
     import ClientDetail from "../Shared/ClientDetail.svelte";
-    import { authHeaders } from "../../store/staticValues.js"
-    import { getData } from "../../store/dataHandler.js"
+    import { authHeaders } from "../../store/staticValues.js";
+    import { getData } from "../../store/dataHandler.js";
 
-    let secureStorage = new SecureStorage()
-    let clients = []
+    let secureStorage = new SecureStorage();
+    let clients = [];
     let authToken;
     let aHeaders;
-    //const color = new Color(2, 12, 200, 23, "rgb")
+
     onMount( async () =>{
         authToken = secureStorage.getSync({
                 key: "authToken"
@@ -23,8 +23,8 @@
                 aHeaders.Authorization = `Token ${authToken}`;
             });
 
-        const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders)
-        clients = data.results
+        const data = await getData("http://10.0.2.2:8080/client-list/", aHeaders);
+        clients = data.results;
     });
 
     function onClientTap(event) {
@@ -38,8 +38,7 @@
         else{
             alert("You do not have access to this Client!")
         }
-  }
-
+    };
 </script>
 <page>
     <TherapistTemplate>

@@ -2,8 +2,8 @@
     import {SecureStorage} from "@nativescript/secure-storage";
     import { onMount } from "svelte";
     import TherapistTemplate from "../components/TherapistTemplate.svelte";
-    import QuestionForm from "./QuestionForm.svelte"
-    import { getData } from "../store/dataHandler.js"
+    import QuestionForm from "./QuestionForm.svelte";
+    import { getData } from "../store/dataHandler.js";
     import { authHeaders } from "../store/staticValues.js";
     import { Template } from "svelte-native/components";
     import {navigate} from "svelte-native";
@@ -42,9 +42,7 @@
             page: QuestionForm
         });
     };
-    
 </script>
-
 <page actionBarHidden="true">
     <TherapistTemplate>
         <stackLayout>
@@ -62,7 +60,6 @@
         </stackLayout>
     </TherapistTemplate>
 </page>
-
 <style>
     .question-name{
         font-size: 17;

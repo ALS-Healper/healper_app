@@ -1,19 +1,18 @@
 <script>
-    import { goBack } from 'svelte-native'
-    import { navigate } from 'svelte-native';
-    import { onMount } from 'svelte'
-    import ClientTemplate from '../components/ClientTemplate.svelte'
-    import { getData, postData, patchData } from "../store/dataHandler.js"
-    import { authHeaders } from "../store/staticValues.js"
-    import {SecureStorage} from "@nativescript/secure-storage"
-    //import { cancelQuestionnairNotification } from '~/store/notifications';
-    import Home from './Shared/Home.svelte'
+    import { goBack, navigate } from "svelte-native";
+    import { onMount } from "svelte";
+    import ClientTemplate from "../components/ClientTemplate.svelte";
+    import { getData, postData, patchData } from "../store/dataHandler.js";
+    import { authHeaders } from "../store/staticValues.js";
+    import {SecureStorage} from "@nativescript/secure-storage";
+    import Home from "./Shared/Home.svelte";
+
+    let secureStorage = new SecureStorage();
 
     let currentQuestion = {question_text: "Loading questions"};
     let questionnary_today;
     let questionIndex = 0;
     let questionList = [];
-    let secureStorage = new SecureStorage()
 
     let inputAnswer ="";
     let choiceAnswer ="";
@@ -36,9 +35,8 @@
                 key: "user"
             }));
 
-        //questionEntries/?completed_today=True&client_pk=1
-        const existingAnswer = await getData("http://10.0.2.2:8080/questionEntries/?completed_today=True&client_pk=" + user.pk, aHeaders)
-        const data = await getData("http://10.0.2.2:8080/questionnaires/", aHeaders)
+        const existingAnswer = await getData("http://10.0.2.2:8080/questionEntries/?completed_today=True&client_pk=" + user.pk, aHeaders);
+        const data = await getData("http://10.0.2.2:8080/questionnaires/", aHeaders);
         if(existingAnswer.results[0] && existingAnswer.results[0].is_completed){
             alert("You already answered the diary for today")
             navigate({
@@ -51,11 +49,11 @@
             creator: user.pk,
             questionnaire: data.results[0].pk
             });
-        }
+        };
 
-       questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions]
+       questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions];
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
-       currentQuestion = data.results[0].inputquestions[0]
+       currentQuestion = data.results[0].inputquestions[0];
 
     });
 
@@ -83,7 +81,7 @@
             });
         };
         
-        questionIndex += 1
+        questionIndex += 1;
         currentQuestion = questionIndex >= questionList.length ? {question_text: "Tak for dit svar"} : questionList[questionIndex]
     };
 
@@ -101,10 +99,8 @@
         page: Home,
         props: {isCancled: true}
         })
-    }
-
+    };
 </script>
-
 <page actionBarHidden="true">
     <ClientTemplate>
         <stackLayout>

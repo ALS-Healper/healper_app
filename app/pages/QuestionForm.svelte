@@ -34,23 +34,20 @@
     function launchModal(pickedQuestion, aHeaders, user){
         showModal({page: ModalPage, props: {question: pickedQuestion, header: aHeaders, user: user} });
     };
-
 </script>
-
 <page>
     <TherapistTemplate>
         <actionbar title="Question form page" />
         <flexBoxLayout flexWrap="wrap" justifyContent="center">
-        <stackLayout class="Text">
-        <label text="What kind of question would you like to create" textWrap="true" justifyContent="center"/>
-        {#each options as value}
-	        <button type="radio" textWrap="true" bind:textContent="{value}" on:tap="{launchModal(value)}">{value}</button>
-        {/each}
-        </stackLayout>
-    </flexBoxLayout>
+            <stackLayout class="Text">
+                <label text="What kind of question would you like to create" textWrap="true" justifyContent="center"/>
+                {#each options as value}
+                    <button type="radio" textWrap="true" bind:textContent="{value}" on:tap="{launchModal(value)}">{value}</button>
+                {/each}
+            </stackLayout>
+        </flexBoxLayout>
     </TherapistTemplate>
 </page>
-
 <style>
     .Text{
         font-size: 20;
