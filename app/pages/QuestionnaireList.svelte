@@ -2,16 +2,18 @@
     import { onMount } from "svelte";
     import { Template } from "svelte-native/components";
     import TherapistTemplate from "../components/TherapistTemplate.svelte";
-    import { navigate } from 'svelte-native';
+    import { navigate, showModal } from 'svelte-native';
     import {SecureStorage} from "@nativescript/secure-storage";
     import { authHeaders } from "../store/staticValues.js";
     import { getData } from "../store/dataHandler.js";
     import QuestionnaireDetails from "./QuestionnaireDetails.svelte";
+    import AddQuestionnaireModal from "~/components/addQuestionnaireModal.svelte";
 
     let secureStorage = new SecureStorage();
     let questionnaires;
     let authToken;
     let aHeaders;
+    let choosenQuestionnaire;
 
     onMount( async () =>{
         authToken = secureStorage.getSync({
@@ -28,40 +30,65 @@
 
     });
 
-    function onQuestionnaireTap() {
+    function onQuestionnaireTap(event) {
+       let choosenQuestionnaire = questionnaires[event.index]
         navigate({
-            page: QuestionnaireDetails
+            page: QuestionnaireDetails, props: {questionnairePk: choosenQuestionnaire.pk}
         });
     };
+
+    function addQuestionnaireModal(){
+        showModal({
+            page: AddQuestionnaireModal,
+        });
+    };
+
 </script>
 <page>
     <TherapistTemplate>
-        <stackLayout>
-            <listView items="{questionnaires}" on:itemTap="{onQuestionnaireTap}" height="100%">
+        <stackLayout orientation="vertical">
+            <label class="header">List of your created questionnaires</label>
+            <listView items="{questionnaires}" on:itemTap="{onQuestionnaireTap}" height="85%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
-                        <image src="~/static-resources/images/icons/fatass.png" class="icon" horizontalAlignment="right"/>
+                        <image src="~/static-resources/images/icons/list.png" class="icon" horizontalAlignment="right"/>
                         <stackLayout verticalAlignment="middle" style="padding: 0%;">
                             <label text="{item.title}" class="questionnaire-name"/>
                         </stackLayout>
                     </stackLayout>
                 </Template>
             </listView>
-        </stackLayout>
+            <button text="+" on:tap="{addQuestionnaireModal}"/>
+</stackLayout>
     </TherapistTemplate>
 </page>
 <style>
+    .header{
+        color: black;
+        text-align: center;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif';
+        font-size: 20px;
+        font-weight:400;
+    }
     .questionnaire-name{
         font-size: 17;
         font-weight: bold;
         padding-top: 0%;
         padding-bottom: 0%;
     }
-
     .icon{
         width: 100px;
         height: 100px;
         margin-bottom: 0;
-        color: red;
     }
+    button {
+        position: fixed;
+        bottom: 0;
+        width: 80%;
+        font-size: 18;
+        border-radius: 20px;
+        background-color: rgb(45, 124, 124);
+        color: white;
+        font-weight: bolder;
+    } 
 </style>

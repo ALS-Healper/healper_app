@@ -4,18 +4,20 @@
     import { onMount } from "svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
-    import IconBox from "./IconBox.svelte"
+    import QuestionnaireDetails from "~/pages/QuestionnaireDetails.svelte";
   
     let secureStorage = new SecureStorage();
     let inputAnswer;
-    let inputOptions;
     let buttonText;
+    let createdQuestion;
     let sliderQuestion; 
     let authToken;
     let aHeaders;
     let user; 
-    
+
+    export let questionnairePk;
     export let question;
+    let choosenPk = [questionnairePk]
     
     onMount(async ()=>{
         authToken = secureStorage.getSync({
@@ -33,44 +35,49 @@
 
     });
 
-    function saveNewQuestion(){
+    async function saveNewQuestion(){
         if(question === "input questions"){
-            postData("http://10.0.2.2:8080/question-input/", aHeaders, {question_text: inputAnswer, 
-            creator: user.pk,     
-            });
+            createdQuestion = await postData("http://10.0.2.2:8080/question-input/", aHeaders, {question_text: inputAnswer, 
+            creator: user.pk,
+            questionnaires: choosenPk  
+            }); 
         }
         else if(question === "choice questions"){
-            postData("http://10.0.2.2:8080/question-choice/", aHeaders, {question_text: buttonText, 
-            creator: user.pk,       
-            optioninput: inputOptions   
+            createdQuestion = postData("http://10.0.2.2:8080/question-choice/", aHeaders, {question_text: buttonText, 
+            creator: user.pk,
+            questionnaires: choosenPk  
             });
+
         }
         else{
-            postData("http://10.0.2.2:8080/question-numeric/", aHeaders,{question_text: sliderQuestion, 
-            creator: user.pk,        
+            createdQuestion = postData("http://10.0.2.2:8080/question-numeric/", aHeaders, {question_text: sliderQuestion, 
+            creator: user.pk,    
+            questionnaires: choosenPk      
             });
         };
 
-        closeModal();
+        closeModal({
+            page: QuestionnaireDetails
+        });
     };
+    
 
 </script>
 
 <page>
     <flexBoxLayout class="modalPage" justifyContent="center">
         <stackLayout class="header">
-            <image class="question-icon" src="~/static-resources/images/icons/questionMark.png"/>
+            <image class="questionmark-icon" src="~/static-resources/images/icons/questionmark.png"/>
             <label>Create a new question</label>
         {#if question === "input questions"}
             <textfield bind:text="{inputAnswer}" textWrap="true" hint="Write your input question here"/>
-            <textfield bind:text="{inputOptions}" textWrap="true" hint="Write your options here"/>
             <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
                 {:else if question === "choice questions"}
                 <textfield bind:text="{buttonText}" textWrap="true" hint="Write your choice question here"/>
-                <textfield bind:text="{inputOptions}" textWrap="true" hint="Write your options here"/>
                 <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
                     {:else if question === "numeric questions"}
                         <textfield bind:text="{sliderQuestion}" textWrap="true" hint="Write your numeric question here..."/>
+                        <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
         {/if}
         </stackLayout>
     </flexBoxLayout>
@@ -106,7 +113,7 @@ flexBoxLayout{
         
     }
 
-    .question-icon{
+    .questionmark-icon{
         border-radius: 50%;
         height: 100px;
         width: 100px;

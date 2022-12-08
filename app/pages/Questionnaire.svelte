@@ -189,7 +189,6 @@
 
     .sliderValue{
         font-size: 20;
-        horizontal-align: center;
         vertical-align: center;
     }
 
