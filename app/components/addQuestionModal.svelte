@@ -4,6 +4,7 @@
     import { onMount } from "svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
+    import { navigate } from "svelte-native";
     import QuestionnaireDetails from "~/pages/QuestionnaireDetails.svelte";
   
     let secureStorage = new SecureStorage();
@@ -55,9 +56,13 @@
             questionnaires: choosenPk      
             });
         };
-
         closeModal({
             page: QuestionnaireDetails
+        });
+
+        alert(choosenPk)
+        navigate({
+            page: QuestionnaireDetails, props: {questionnairePk: choosenPk}
         });
     };
     

@@ -54,7 +54,6 @@
         border-radius: 1px solid black;
         color: rgb(45, 124, 124); 
         -webkit-text-stroke: 1px black;
-        text-shadow: 2px 2px 8px black;
         width: 100%;
         text-align: center;
         align-self: center;

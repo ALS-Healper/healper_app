@@ -18,7 +18,7 @@
     let choiceQuestions = [];
     let numericQuestions = [];
 
-    export let questionnairePk; 
+    export let questionnaire; 
 
 
     onMount(async () => {
@@ -31,26 +31,27 @@
                 aHeaders.Authorization = `Token ${authToken}`;
             });
         
-            const data = await getData("http://10.0.2.2:8080/questionnaires/" + questionnairePk, aHeaders);
-            inputQuestions = data.results[0].inputquestions;
-            choiceQuestions = data.results[0].choicequestions;
-            numericQuestions = data.results[0].numericquestions;
+            const data = await getData("http://10.0.2.2:8080/questionnaires/" + questionnaire.pk, aHeaders);
+            inputQuestions = data.inputquestions;
+            choiceQuestions = data.choicequestions;
+            numericQuestions = data.numericquestions;
 
             questionList = [...inputQuestions, ...choiceQuestions, ...numericQuestions]
-    
     });
 
-    alert(JSON.stringify(questionList))
 
     function addQuestion(){
         navigate({
-            page: QuestionForm, props: {questionnairePk: questionnairePk}
+            page: QuestionForm, 
+            props: {questionnairePk: questionnaire.pk}
         });
     };
 
-    function seeQuestion(){
+    function seeQuestion(event){
+        let q = questionList[event.index]
         navigate({
-            page: OptionList
+            page: OptionList, 
+            props: {question: q}
         })
 
     }
@@ -58,7 +59,7 @@
 <page actionBarHidden="true">
     <TherapistTemplate>
         <stackLayout>
-            <label class="header">List of questions for the choosen questionnaire</label>
+            <label class="header" textWrap="true" text="Details of: {questionnaire.title}"/>
             <listView items="{questionList}" on:itemTap="{seeQuestion}" height="85%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
@@ -75,11 +76,15 @@
 </page>
 <style>
     .header{
-        color: black;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 25px;
+        border-radius: 1px solid black;
+        color: rgb(45, 124, 124); 
+        -webkit-text-stroke: 1px black;
+        width: 100%;
         text-align: center;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif';
-        font-size: 15px;
-        font-weight:400;
+        align-self: center;
     }
     .question-name{
         font-size: 17;

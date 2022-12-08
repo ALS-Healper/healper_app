@@ -33,7 +33,7 @@
     function onQuestionnaireTap(event) {
        let choosenQuestionnaire = questionnaires[event.index]
         navigate({
-            page: QuestionnaireDetails, props: {questionnairePk: choosenQuestionnaire.pk}
+            page: QuestionnaireDetails, props: {questionnaire: choosenQuestionnaire}
         });
     };
 
@@ -47,7 +47,7 @@
 <page>
     <TherapistTemplate>
         <stackLayout orientation="vertical">
-            <label class="header">List of your created questionnaires</label>
+            <label class="header" textWrap="true">List of your created questionnaires</label>
             <listView items="{questionnaires}" on:itemTap="{onQuestionnaireTap}" height="85%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
@@ -59,16 +59,20 @@
                 </Template>
             </listView>
             <button text="+" on:tap="{addQuestionnaireModal}"/>
-</stackLayout>
+        </stackLayout>
     </TherapistTemplate>
 </page>
 <style>
     .header{
-        color: black;
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-weight: bolder;
+        font-size: 25px;
+        border-radius: 1px solid black;
+        color: rgb(45, 124, 124); 
+        -webkit-text-stroke: 1px black;
+        width: 100%;
         text-align: center;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', 'Arial', 'sans-serif';
-        font-size: 20px;
-        font-weight:400;
+        align-self: center;
     }
     .questionnaire-name{
         font-size: 17;
