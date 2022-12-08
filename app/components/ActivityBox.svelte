@@ -2,22 +2,26 @@
     export let backgroundColor;
     export let boxHeaderText;
     export let boxDescText;
-
+    export let backgroundImgSrc;
 </script>
-    <stackLayout>
-        <label class="header" text="{boxHeaderText}"></label>
-        <label class="description" text="{boxDescText}"></label>
+    <stackLayout backgroundImage="{backgroundImgSrc}" backgroundColor="{backgroundColor}">
+        <label class="header" text="{boxHeaderText}"/>
+        <label class="description" text="{boxDescText}"/>
         <image class="arrow-icon" src="~/static-resources/images/icons/arrow_right.png">
     </stackLayout>
 <style>
     stackLayout{
         height: 800px;
         width: 90%;
-        background-color: rgb(235, 234, 234);
+        background-color: rgba(235, 234, 234, 0.86);
         border: solid 1px black;
         margin-top: 100px;
         padding-bottom: 60px;
         border-radius: 10%;
+        background-repeat: false;
+        background-position: center;
+        background-size: cover;
+        opacity: 0.8;
     }
 
     .header{

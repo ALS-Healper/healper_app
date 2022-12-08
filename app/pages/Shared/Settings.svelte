@@ -68,7 +68,7 @@
             </stackLayout>
             <stackLayout class="section">
                 <label class="section-header" text="Settings" />
-                {#if user.is_therapist}
+                {#if !user.is_therapist}
                     <stackLayout class="section-item" orientation="horizontal">
                         <label text="Change Therapist permission"/>
                         <switch bind:checked="{switchEnabled}" on:tap="{onCheckedChange}" />

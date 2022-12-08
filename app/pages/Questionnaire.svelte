@@ -6,6 +6,7 @@
     import { authHeaders } from "../store/staticValues.js";
     import {SecureStorage} from "@nativescript/secure-storage";
     import Home from "./Shared/Home.svelte";
+    import Button from "../components/Button.svelte";
 
     let secureStorage = new SecureStorage();
 
@@ -45,15 +46,15 @@
             });
         }
         else{
-            questionnary_today = await postData("http://10.0.2.2:8080/questionEntries/", aHeaders, {
+            /*questionnary_today = await postData("http://10.0.2.2:8080/questionEntries/", aHeaders, {
             creator: user.pk,
             questionnaire: data.results[0].pk
-            });
+            });*/
         };
 
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions];
     // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
-       currentQuestion = data.results[0].inputquestions[0];
+       currentQuestion = data.results[0].choicequestions[0];
 
     });
 
@@ -109,41 +110,49 @@
             <flexBoxLayout flexWrap="wrap" justifyContent="center">
             {#if currentQuestion.optioninputs}
                 {#each currentQuestion.optioninputs as option}
-                <textfield textWrap="true" bind:text="{inputAnswer}" hint="{option.standard_text}"/>
+                <textView textWrape="true" bind:text="{inputAnswer}" hint="{option.standard_text}"/>
                 {/each}
-                <button text="Submit answer" class="button" on:tap={onAnswerTap}/>
+                <Button buttonText="Submit answer" onTapFunc={onAnswerTap}/>
             {/if}
             {#if currentQuestion.optionchoices}
-                {#each currentQuestion.optionchoices as option}
-                    <button bind:text="{option.option_value}" class="button" on:tap={onAnswerTap}/>
-                {/each}
+                <stackLayout orientation="horizontal" class="choices-box" >
+                    {#each currentQuestion.optionchoices as option}
+                        <button bind:text="{option.option_value}" class="choice-button" on:tap={onAnswerTap}/>
+                    {/each}
+                </stackLayout>
             {/if}
             {#if currentQuestion.optionnumerics}
-            {#each currentQuestion.optionnumerics as option}
-            <label text="{sliderValue}" class="sliderValue"/>
-            <stackLayout orientation="horizontal" class="sliderField">
-                    <label text="{option.min_value}"/>
-                    <slider minValue="{option.min_value}" 
-                    maxValue="{option.max_value}"
-                    bind:value="{sliderValue}"
-                    on:valueChange="{sliderValueChange}" width=80%/>
-                    <label text="{option.max_value}"/>
-            </stackLayout>
-                <button text="Submit answer" class="button" on:tap={onAnswerTap} verticalAlignment="bottom"/>
+                {#each currentQuestion.optionnumerics as option}
+                <stackLayout orientation="vertical" width="100%">
+                    <label text="{sliderValue}" class="sliderValue"/>
+                    <stackLayout orientation="horizontal" class="sliderField">
+                            <label text="{option.min_value}"/>
+                            <slider minValue="{option.min_value}" 
+                                maxValue="{option.max_value}"
+                                bind:value="{sliderValue}"
+                                on:valueChange="{sliderValueChange}" 
+                                width=80%
+                                backgroundColor="green"
+                                color="white"
+                                lineThickness="10"/>
+                            <label text="{option.max_value}"/>
+                    </stackLayout>
+                    <button text="Submit answer" class="button" on:tap={onAnswerTap} verticalAlignment="bottom"/>
+                </stackLayout>
                 {/each}
-                {:else}
-                    <button text="Back" class="button" on:tap="{finishAnswers}" verticalAlignment="bottom"/>
+            {:else}
+                <Button buttonText="Back" onTapFunc={finishAnswers}/>
             {/if}
             </flexBoxLayout>
         </stackLayout>
     </ClientTemplate>
 </page>
-
 <style>
     .selectionText{
         font-size: 20;
         vertical-align: center;
     }
+
     .button {
         position: fixed;
         bottom: 0;
@@ -154,27 +163,50 @@
         color: white;
         font-weight: bolder;
     }
+
+    .choices-box{
+        width: 90%;
+        align-self: center;
+        justify-content: space-evenly;
+        vertical-align: center;
+    }
+
+    .choice-button{
+        width: 33.33%;
+        font-size: 18;
+        border-radius: 20px;
+        background-color: rgb(45, 124, 124);
+        color: white;
+        font-weight: bolder;
+    }
+
     .questionText{
         margin: 30;
         font-size: 35;
         font-weight: bolder;
+        text-align: center;
     }
+
     .sliderValue{
         font-size: 20;
         horizontal-align: center;
         vertical-align: center;
     }
+
     .sliderField{
         width: 80%;
         font-size: 10;
     }
 
-    textfield{
-        background-color:rgba(187, 183, 177, 0.49); 
+    textView{
+        background-color:rgba(247, 243, 235, 0.829); 
         font-size: 20;
         width: 80%;
-        height: 500px;
+        height: 750px;
         border-radius: 10%;
+        text-decoration-color: rgb(85, 80, 80);
+        text-anchor: start;
+        text-indent: 15%;
     }
 
     .tobias{

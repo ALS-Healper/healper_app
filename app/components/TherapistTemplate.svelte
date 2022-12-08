@@ -8,6 +8,6 @@
 </page>
 <style>
     page{
-        background: linear-gradient(122deg, rgb(127, 171, 222), rgb(230, 197, 166));
+        background: linear-gradient(125deg, rgba(199, 222, 222, 1) 0%, rgba(199, 222, 231, 1));
     }
 </style>
