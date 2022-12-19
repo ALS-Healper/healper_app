@@ -4,19 +4,21 @@
     import { onMount } from "svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
-    import QuestionnaireDetails from "../pages/QuestionnaireDetails.svelte";
-  
+    import OptionList from "~/pages/Therapist/OptionList.svelte";
+
     let secureStorage = new SecureStorage();
     let inputAnswer;
-    let buttonText;
-    let sliderQuestion; 
+    let choiceValue;
+    let createdQuestion;
+    let minValue;
+    let maxValue;
     let authToken;
     let aHeaders;
-    let user; 
 
-    export let questionnairePk;
+
     export let question;
-    let choosenPk = [questionnairePk]
+    export let optionGenre;
+    let questionPk = question.pk
     
     onMount(async ()=>{
         authToken = secureStorage.getSync({
@@ -34,38 +36,34 @@
 
     });
 
-    async function saveNewQuestion(){
-        if(question === "input questions"){
-            createdQuestion = await postData("http://10.0.2.2:8080/question-input/", aHeaders, {question_text: inputAnswer, 
-            creator: user.pk,
-            questionnaires: choosenPk  
+    async function saveNewOption(){
+        if(optionGenre === "input"){
+            createdQuestion = await postData("http://10.0.2.2:8080/option-input/", aHeaders, {standard_text: inputAnswer,
+            question: questionPk  
             }); 
-
         }
-        else if(question === "choice questions"){
-            createdQuestion = postData("http://10.0.2.2:8080/question-choice/", aHeaders, {question_text: buttonText, 
-            creator: user.pk,
-            questionnaires: choosenPk  
+        else if(optionGenre === "choice"){
+            createdQuestion = postData("http://10.0.2.2:8080/option-choice/", aHeaders, {option_value: choiceValue,
+            question: questionPk  
             });
+
         }
         else{
-            createdQuestion = postData("http://10.0.2.2:8080/question-numeric/", aHeaders, {question_text: sliderQuestion, 
-            creator: user.pk,    
-            questionnaires: choosenPk      
+            createdQuestion = postData("http://10.0.2.2:8080/option-numeric/", aHeaders, {min_value: minValue, max_value: maxValue,
+            question: questionPk      
             });
-
         };
 
-        closeModalTwo()
-
+        closeModalFunction();
+        alert(questionPk)
+       
     };
 
-    function closeModalTwo(){
+    function closeModalFunction(){
         closeModal({
-            page: QuestionnaireDetails
+            page: OptionList
         });
-    }
-    
+    };
 
 </script>
 
@@ -73,16 +71,17 @@
     <flexBoxLayout class="modalPage" justifyContent="center">
         <stackLayout class="header">
             <image class="questionmark-icon" src="~/static-resources/images/icons/questionmark.png"/>
-            <label>Create a new question</label>
-        {#if question === "input questions"}
-            <textfield bind:text="{inputAnswer}" textWrap="true" hint="Write your input question here"/>
-            <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
-                {:else if question === "choice questions"}
-                <textfield bind:text="{buttonText}" textWrap="true" hint="Write your choice question here"/>
-                <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
-                    {:else if question === "numeric questions"}
-                        <textfield bind:text="{sliderQuestion}" textWrap="true" hint="Write your numeric question here..."/>
-                        <button text="Submit answer" class="button" on:tap="{saveNewQuestion}"/>
+            <label text="Write option" />
+        {#if optionGenre === "input"}
+            <textfield bind:text="{inputAnswer}" textWrap="true" hint="Write your input option here"/>
+            <button text="Save option" class="button" on:tap="{saveNewOption}"/>
+                {:else if optionGenre === "choice"}
+                <textfield bind:text="{choiceValue}" textWrap="true" hint="Write your choice option here"/>
+                <button text="Save choice" class="button" on:tap="{saveNewOption}"/>
+                    {:else if optionGenre === "numeric"}
+                        <textfield bind:text="{minValue}" textWrap="true" hint="Write the minimum value"/>
+                        <textfield bind:text="{maxValue}" textWrap="true" hint="Write the maximum value"/>
+                        <button text="Save values" class="button" on:tap="{saveNewOption}"/>
         {/if}
         </stackLayout>
     </flexBoxLayout>

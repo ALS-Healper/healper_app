@@ -4,7 +4,7 @@
     import { onMount } from "svelte";
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
-    import QuestionnaireDetails from "~/pages/QuestionnaireList.svelte";
+    import QuestionnaireList from "../pages/QuestionnaireList.svelte"
   
     let secureStorage = new SecureStorage();
     let titleOfNewQuestionnaire;

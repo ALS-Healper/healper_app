@@ -3,9 +3,9 @@
     import TherapistTemplate from "~/components/TherapistTemplate.svelte";
     import { Template } from "svelte-native/components"; 
     import { onMount } from "svelte";
-    import { getData } from "~/store/dataHandler";
     import { authHeaders } from "~/store/staticValues";
-    import Button from "../../components/Button.svelte"
+    import { showModal } from "svelte-native";
+    import AddOptionModal from "~/components/addOptionModal.svelte";
 
     let secureStorage = new SecureStorage();
     let authToken;
@@ -43,8 +43,8 @@
     }
 
     function addOption(){
-        
-    }
+        showModal({page: AddOptionModal, props: {question: question, optionGenre: urlPath}});
+    };
     
 </script>
 
@@ -52,23 +52,24 @@
     <TherapistTemplate>
         <stackLayout>
             <label class="header" textWrap="true" text="Options and details for question: {question.question_text}"/>
-            <listView items="{optionList}" on:itemTap="{editOption}" height="85%">
+            <listView items="{optionList}" on:itemTap="{editOption}" height="76%">
                 <Template let:item>
                     <stackLayout orientation="horizontal">
                         <image src="~/static-resources/images/icons/list.png" class="icon" horizontalAlignment="right"/>
                         <stackLayout verticalAlignment="middle" style="padding: 0%;">
-                            {#if urlPath==="numeric"}
+                            {#if urlPath === "numeric"}
                                 <label text="From: {item.min_value}" class="option-name"/>
                                 <label text="To: {item.max_value}" class="option-name"/>
-                            {:else if urlPath==="choice"}
+                            {:else if urlPath === "choice"}
                                 <label text="Option: {item.option_value}" class="option-name"/>
-                            {:else if urlPath==="input"}
+                            {:else if urlPath === "input"}
                                 <label text="{item.standard_text}" class="option-name"/>
                             {/if}
                         </stackLayout>
                     </stackLayout>
                 </Template>
             </listView>
+            <!--{#if question.optionnumerics[0] || question.optioninputs[0]}-->
             <button text="+" on:tap="{addOption}"/>
         </stackLayout>
     </TherapistTemplate>
