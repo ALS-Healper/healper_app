@@ -5,6 +5,7 @@
     import { authHeaders } from "../store/staticValues.js";
     import { SecureStorage } from "@nativescript/secure-storage";
     import QuestionnaireDetails from "../pages/QuestionnaireDetails.svelte";
+    import QuestionForm from "../pages/QuestionnaireList.svelte";
   
     let secureStorage = new SecureStorage();
     let inputAnswer;
@@ -62,7 +63,7 @@
 
     function closeModalTwo(){
         closeModal({
-            page: QuestionnaireDetails
+            page: QuestionForm
         });
     }
     

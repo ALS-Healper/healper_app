@@ -7,9 +7,7 @@
     import {SecureStorage} from "@nativescript/secure-storage";
     import Home from "./Shared/Home.svelte";
     import Button from "../components/Button.svelte";
-
     let secureStorage = new SecureStorage();
-
     let currentQuestion = {question_text: "Loading questions"};
     let questionnary_today;
     let questionIndex = 0;
@@ -46,15 +44,14 @@
             });
         }
         else{
-            /*questionnary_today = await postData("http://10.0.2.2:8080/questionEntries/", aHeaders, {
+            questionnary_today = await postData("http://10.0.2.2:8080/questionEntries/", aHeaders, {
             creator: user.pk,
             questionnaire: data.results[0].pk
-            });*/
+            });
         };
 
        questionList = [...data.results[0].inputquestions, ...data.results[0].choicequestions, ...data.results[0].numericquestions];
-    // Hvis det her virker skal der måske laves en sortering som sætter dem i den rigtige rækkefølge for questionnairen
-       currentQuestion = data.results[0].choicequestions[0];
+       currentQuestion = data.results[0].inputquestions[0];
 
     });
 
@@ -105,7 +102,6 @@
 <page actionBarHidden="true">
     <ClientTemplate>
         <stackLayout>
-            <image class="tobias" src="https://healper-static.s3.amazonaws.com/images/team-members/tobias.jpg"/>
             <label text="{currentQuestion.question_text}" class="questionText" textWrap="true" horizontal-align= "center"/>
             <flexBoxLayout flexWrap="wrap" justifyContent="center">
             {#if currentQuestion.optioninputs}
